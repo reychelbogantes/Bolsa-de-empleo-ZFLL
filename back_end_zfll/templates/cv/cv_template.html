@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #1a56db;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{ cv.user.get_full_name }}</h1>
+    <p>{{ cv.user.email }} | {{ cv.user.phone }}</p>
+    <div class="section">
+        <h2>Resumen</h2>
+        <p>{{ cv.summary }}</p>
+    </div>
+    <!-- Se expandirá en E2-4 con experiencia, educación y skills -->
+</body>
+
+</html>

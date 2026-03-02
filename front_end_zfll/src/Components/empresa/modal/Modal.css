@@ -1,0 +1,118 @@
+/* Contenedor del formulario */
+.modal-content {
+    background: #fff;
+    width: 95%; /* Un poco más de margen en móviles */
+    max-width: 700px; /* <--- CAMBIA DE 550px A 700px */
+    max-height: 90vh;
+    /* ... resto del código ... */
+}
+.modal-form {
+  padding: 1rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Títulos de sección con el número azul */
+.modal-form h4 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #163a6d;
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem 0;
+}
+
+/* Grid para la sección de Información General */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  gap: 1.5rem;
+}
+
+/* Grupo de campo (Label + Input) */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Estilo de los inputs, selects y textareas */
+.modal-form input:not([type="radio"]),
+.modal-form select,
+.modal-form textarea {
+  padding: 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #fcfcfc;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  outline: none;
+  border-color: #1988a6;
+  box-shadow: 0 0 0 3px rgba(25, 136, 166, 0.1);
+  background-color: #fff;
+}
+
+/* Ajuste para los Radios (Estilo Tarjeta) */
+.radio-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+  margin-top: 4px;
+  accent-color: #163a6d;
+  width: 18px;
+  height: 18px;
+}
+
+.radio-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-title {
+  font-weight: 600;
+  color: #163a6d;
+  font-size: 0.95rem;
+}
+
+/* Botón Publicar */
+.btn-submit-modal {
+  background-color: #1988a6;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.btn-submit-modal:hover {
+  background-color: #163a6d;
+}

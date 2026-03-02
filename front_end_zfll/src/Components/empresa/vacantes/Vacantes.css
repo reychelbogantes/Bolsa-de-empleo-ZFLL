@@ -1,0 +1,182 @@
+.vacantes-container {
+  max-width: 600px;
+  margin: 0 auto; /* centra el div */
+  padding: 2rem;
+}
+
+/* HEADER */
+.vacantes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.vacantes-header h2 {
+  color: #163a6d;
+  margin: 0;
+}
+
+.vacantes-header p {
+  color: #1988a6;
+  margin: 0.2rem 0 0;
+}
+
+/* BOTÓN PRINCIPAL */
+.btn-primary {
+  background: #1988a6;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #163a6d;
+}
+
+/* BUSCADOR */
+.search-box input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #1988a6;
+  border-radius: 6px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: #b1b900;
+}
+
+/* LISTA DE VACANTES */
+.vacantes-list {
+  margin-top: 1.5rem;
+}
+
+.vacante-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  border: 1px solid #163a6d;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.vacante-card:hover {
+  transform: translateY(-3px);
+}
+
+.vacante-info h3 {
+  margin: 0;
+  color: #163a6d;
+}
+
+.vacante-info p {
+  margin: 0.3rem 0;
+  color: #555;
+}
+
+/* BADGES */
+.badge.activa {
+  background: #1988a6;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.badge.pausada {
+  background: #b1b900;
+  color: #163a6d;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+/* ACCIONES */
+.vacante-actions button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: #1988a6;
+}
+
+.vacante-actions button:hover {
+  color: #163a6d;
+}
+
+
+/* --- ESTILOS DEL COMPONENTE MODAL --- */
+
+/* El fondo oscuro que cubre la pantalla */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(22, 58, 109, 0.7); /* Azul oscuro con transparencia */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px); /* Efecto de desenfoque opcional */
+}
+
+/* El contenedor blanco del modal */
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 550px;
+  max-height: 90vh; /* Para que no se salga de la pantalla */
+  overflow-y: auto; /* Scroll interno si el formulario es largo */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  border: 1px solid #1988a6;
+}
+
+/* Header del modal (donde va el título y la X) */
+.modal-header {
+  padding: 1.5rem 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  color: #163a6d;
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+/* Botón de cerrar (X) */
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #1988a6;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #b1b900;
+}
+
+/* Personalización del scroll interno */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #1988a6;
+  border-radius: 10px;
+}
