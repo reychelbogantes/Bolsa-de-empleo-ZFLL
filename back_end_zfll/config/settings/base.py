@@ -20,6 +20,9 @@ SECRET_KEY = config("SECRET_KEY", default="change-me-in-production")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
 
+# Permite que Google OAuth pueda comunicarse con tu app
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
 # ──────────────────────────────────────────────
 # Application definition
 # ──────────────────────────────────────────────
@@ -62,6 +65,8 @@ LOCAL_APPS = [
     "apps.notifications",
     "apps.analytics",
     "apps.audit",
+    "apps.auth_api",
+    "apps.pasantias"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -109,7 +114,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": config("DB_NAME", default="bolsa_empleo"),
         "USER": config("DB_USER", default="postgres"),
-        "PASSWORD": config("DB_PASSWORD", default="postgres"),
+        "PASSWORD": config("DB_PASSWORD", default="1234"),
         "HOST": config("DB_HOST", default="localhost"),
         "PORT": config("DB_PORT", default="5432"),
     }
@@ -199,7 +204,15 @@ SIMPLE_JWT = {
 # ──────────────────────────────────────────────
 # CORS
 # ──────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+""" CORS_ALLOW_ALL_ORIGINS = True """
 
 # ──────────────────────────────────────────────
 # Celery
@@ -224,7 +237,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": ["profile", "email"],
         "AUTH_PARAMS": {"access_type": "online"},
         "APP": {
-            "client_id": config("GOOGLE_CLIENT_ID", default=""),
+            "client_id": config("GOOGLE_CLIENT_ID", default="283271970934-353ubog56mdvg8q0i2aoted2pkmanib5.apps.googleusercontent.com"),
             "secret": config("GOOGLE_CLIENT_SECRET", default=""),
         },
     }

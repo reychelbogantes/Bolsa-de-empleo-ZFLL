@@ -1,0 +1,379 @@
+:root {
+    --azul: #163a6d;
+    --azul2: #2563eb;
+    --bg: #f5f8ff;
+    --card: #ffffff;
+    --border: #e6edf6;
+    --muted: #7b8da6;
+}
+
+.eg-wrap {
+    width: 100%;
+}
+
+.eg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.eg-header h2 {
+    margin: 0;
+    font-weight: 1000;
+    color: var(--azul);
+}
+
+.eg-date {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.eg-date span {
+    display: block;
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: .6px;
+}
+
+.eg-search-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, .05);
+}
+
+.eg-search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-weight: 700;
+}
+
+.eg-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+}
+
+.eg-sidebar-title {
+    font-size: 11px;
+    font-weight: 1000;
+    letter-spacing: .8px;
+    color: #9aaac1;
+    margin-bottom: 12px;
+}
+
+.eg-inst {
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    padding: 16px;
+    text-align: left;
+    background: #f1f5fb;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.eg-inst.active {
+    background: linear-gradient(135deg, var(--azul2), #3b82f6);
+    color: white;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, .25);
+}
+
+.eg-inst-name {
+    font-weight: 900;
+    font-size: 13px;
+}
+
+.eg-inst-prov {
+    font-size: 11px;
+    opacity: .8;
+    margin-top: 4px;
+}
+
+.eg-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.eg-results-header h3 {
+    margin: 0;
+    font-weight: 1000;
+    color: var(--azul);
+}
+
+.eg-count {
+    background: #e8f0ff;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 1000;
+    color: var(--azul2);
+}
+
+.eg-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.eg-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, .05);
+}
+
+.eg-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: #eef4ff;
+    display: grid;
+    place-items: center;
+    font-weight: 1000;
+    color: var(--azul2);
+    font-size: 18px;
+}
+
+.eg-name {
+    font-weight: 1000;
+    color: #0f172a;
+}
+
+.eg-career {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.eg-skills {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.eg-skill {
+    background: #f1f5fb;
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #4b5e75;
+}
+
+@media(max-width:980px) {
+    .eg-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================
+   MODAL PERFIL ESTUDIANTE
+========================== */
+.eg-card {
+    cursor: pointer;
+}
+
+.st-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.st-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.st-left {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.st-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #eef4ff;
+    border: 1px solid #dbeafe;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 1000;
+    color: #2563eb;
+}
+
+.st-name {
+    margin: 0;
+    font-weight: 1000;
+    color: #0f172a;
+}
+
+.st-career {
+    margin-top: 6px;
+    color: #2563eb;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.st-meta {
+    margin-top: 6px;
+    color: #94a3b8;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+.st-sec-title {
+    font-size: 10px;
+    font-weight: 1000;
+    letter-spacing: .8px;
+    color: #93a6be;
+    margin-bottom: 10px;
+}
+
+.st-power {
+    min-width: 320px;
+}
+
+.st-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.st-chip {
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 1000;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+}
+
+.st-chip.orange {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #ea580c;
+}
+
+.st-chip.blue {
+    background: #eef6ff;
+    border-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.st-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 14px;
+}
+
+.st-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 14px;
+}
+
+.st-card-title {
+    font-size: 10px;
+    font-weight: 1000;
+    letter-spacing: .8px;
+    color: #93a6be;
+    margin-bottom: 10px;
+}
+
+.st-text {
+    margin: 0;
+    color: #475569;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.st-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.st-contact-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 900;
+    color: #334155;
+    font-size: 12px;
+}
+
+.st-ico {
+    width: 26px;
+    height: 26px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+}
+
+.st-prof {
+    font-weight: 1000;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.st-quote {
+    font-style: italic;
+    color: #2563eb;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.st-download {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-weight: 1000;
+    color: #fff;
+    background: #0f172a;
+    box-shadow: 0 12px 22px rgba(15, 23, 42, .12);
+}
+
+@media (max-width: 900px) {
+    .st-top {
+        flex-direction: column;
+    }
+
+    .st-power {
+        min-width: unset;
+    }
+
+    .st-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,167 @@
+.ii-wrap {
+  padding: 10px 6px;
+}
+
+.ii-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 1000;
+  color: #0f172a;
+}
+
+.ii-head p {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.ii-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* CARD */
+.ii-card {
+  background: #fff;
+  border: 1px solid #e8eef6;
+  border-radius: 26px;
+  padding: 18px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+}
+
+.ii-cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ii-title {
+  font-weight: 1000;
+  font-size: 14px;
+}
+
+.ii-btn-edit {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ii-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ii-field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .7px;
+  color: #93a6be;
+  margin-bottom: 6px;
+}
+
+.ii-input {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 14px;
+  font-weight: 900;
+}
+
+.ii-textarea {
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* STATUS */
+.ii-status {
+  background: #0f172a;
+  color: #fff;
+  border-radius: 26px;
+  padding: 20px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.3);
+}
+
+.ii-statusTitle {
+  font-weight: 1000;
+  margin-bottom: 14px;
+}
+
+.ii-statusRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+.ii-badge.verified {
+  background: #10b981;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.ii-active {
+  color: #10b981;
+}
+
+.ii-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  margin: 14px 0;
+}
+
+.ii-statusText {
+  font-size: 12px;
+  opacity: .8;
+}
+
+/* Modal */
+.ii-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ii-form input,
+.ii-form textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-weight: 900;
+}
+
+.ii-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ii-cancel {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 900;
+}
+
+.ii-save {
+  background: #2563eb;
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 900;
+  color: white;
+}

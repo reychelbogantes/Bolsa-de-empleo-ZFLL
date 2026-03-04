@@ -1,10 +1,26 @@
 """
 Custom permission classes based on user roles.
 All role checks use the M2M roles system (user.has_role()).
-Never use is_staff for business logic.
 """
 
 from rest_framework.permissions import BasePermission
+
+
+def _is_admin(user) -> bool:
+    """
+    Helper interno: devuelve True si el usuario es administrador por cualquier vía:
+      1. is_superuser=True  (superusuarios creados con createsuperuser)
+      2. is_staff=True      (staff de Django)
+      3. rol 'admin' en tabla usuario_roles
+      4. rol 'admin_plataforma' en tabla usuario_roles
+    """
+    if not user or not user.is_authenticated:
+        return False
+    if user.is_superuser or user.is_staff:
+        return True
+    if hasattr(user, 'has_role'):
+        return user.has_role("admin") or user.has_role("admin_plataforma")
+    return False
 
 
 class IsAspirante(BasePermission):
@@ -45,11 +61,14 @@ class IsInstitucion(BasePermission):
 
 
 class IsPlatformAdmin(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and (
-            request.user.has_role("admin") or request.user.has_role("admin_plataforma")
-        )
+    """
+    Permite acceso a administradores de la plataforma.
+    Acepta superusuarios Django, staff, y usuarios con rol 'admin' o 'admin_plataforma'
+    en la tabla usuario_roles.
+    """
 
+    def has_permission(self, request, view):
+        return _is_admin(request.user)
 
 
 class IsObjectOwner(BasePermission):
@@ -64,9 +83,11 @@ class IsObjectOwner(BasePermission):
 
 
 class IsAdminOrReadOnly(BasePermission):
+    """Admins pueden escribir; cualquier autenticado puede leer."""
+
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
         if request.method in ("GET", "HEAD", "OPTIONS"):
             return True
-        return request.user.has_role("admin") or request.user.has_role("admin_plataforma")
+        return _is_admin(request.user)

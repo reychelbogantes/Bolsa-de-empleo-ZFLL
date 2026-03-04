@@ -35,7 +35,7 @@ class Empresa(models.Model):
         null=True, blank=True, related_name="empresas",
         verbose_name="Estado de vacante",
     )
-    activa = models.BooleanField("Activa", default=True)
+    activa = models.BooleanField("Activa", default=False)
     extra_data = models.JSONField("Datos extra", default=dict, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

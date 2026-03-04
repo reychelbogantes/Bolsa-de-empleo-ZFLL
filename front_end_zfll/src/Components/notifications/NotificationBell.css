@@ -1,0 +1,61 @@
+/* ─── NotificationBell ─── */
+
+.notif-bell-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.notif-bell-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 0.625rem;
+  background: transparent;
+  cursor: pointer;
+  color: #64748b;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.notif-bell-btn:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
+  transform: scale(1.05);
+}
+
+.notif-bell-btn:active {
+  transform: scale(0.95);
+}
+
+.notif-bell-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.notif-bell-badge {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.15rem;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+  animation: notif-pulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes notif-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15); }
+}

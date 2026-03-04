@@ -1,0 +1,552 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+/* ============================================================
+   VARIABLES DEL SISTEMA DE DISEÑO
+   ============================================================ */
+:root {
+  /* Colores de marca */
+  --color-primary:      #163A6D;   /* Azul marino principal */
+  --color-accent:       #B1B900;   /* Amarillo-verde acento */
+  --color-secondary:    #1988A6;   /* Azul teal secundario */
+
+  /* Neutros */
+  --color-bg-main:      #f8fafc;
+  --color-bg-card:      #ffffff;
+  --color-text-heading: #0f172a;
+  --color-text-body:    #475569;
+  --color-text-muted:   #94a3b8;
+  --white:              #ffffff;
+
+  /* Badges */
+  --color-badge-primary-bg:   #e0eaf5;
+  --color-badge-primary-text: #163A6D;
+  --color-badge-accent-bg:    #f5f6d0;
+  --color-badge-accent-text:  #7a7e00;
+
+  /* Bordes y sombras */
+  --border-light:  1px solid #f1f5f9;
+  --border-button: 1px solid #e2e8f0;
+  --shadow-sm:     0 1px 3px 0 rgba(0, 0, 0, 0.05);
+
+  /* Radios */
+  --radius-card:   24px;
+  --radius-button: 12px;
+  --radius-icon:   10px;
+  --radius-md:     12px;
+  --radius-lg:     20px;
+
+  /* Tipografía — Gotham (fallback Nunito si no está instalada) */
+  --font-main: 'Gotham', 'Nunito', sans-serif;
+}
+
+/* ============================================================
+   HOME / HERO
+   ============================================================ */
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 8%;
+  gap: 40px;
+  background-color: var(--white);
+  font-family: var(--font-main);
+}
+
+.home-content {
+  flex: 1;
+  max-width: 550px;
+}
+
+.home-title {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+}
+
+.home-title .highlight {
+  color: var(--color-accent);
+}
+
+.home-subtitle {
+  font-size: 20px;
+  color: var(--color-text-body);
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+/* Botones */
+.home-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.btn {
+  padding: 16px 32px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-family: var(--font-main);
+}
+
+.btn.primary {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+}
+
+.btn.primary:hover {
+  background-color: var(--color-primary);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background-color: var(--white);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn.secondary:hover {
+  background-color: var(--color-primary);
+  color: var(--white);
+}
+
+/* Imagen hero */
+.hero-image {
+  flex: 1;
+  position: relative;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+}
+
+/* Label de vacantes */
+.vacantes-label {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: var(--white);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.vacantes-label .count {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary);
+  display: block;
+}
+
+.vacantes-label .text {
+  font-size: 14px;
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+/* ============================================================
+   CARRUSEL
+   ============================================================ */
+:root {
+  --carousel-speed: 40s;
+}
+
+.carrusel {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--white);
+  padding: 10px 0;
+  position: relative;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  box-sizing: border-box;
+}
+/* 
+.carrusel::before {
+  content: "EMPRESAS QUE CONFÍAN EN NOSOTROS";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-secondary);
+  background: var(--white);
+  padding: 0 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 2;
+  font-family: var(--font-main);
+} */
+
+.carrusel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    #ffffff 0%,
+    transparent 6%,
+    transparent 94%,
+    #ffffff 100%
+  );
+  z-index: 1;
+}
+
+.texto {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: scroll var(--carousel-speed) linear infinite;
+  will-change: transform;
+}
+
+.empresa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2.5rem;
+  height: 44px;
+  flex-shrink: 0;
+  border-right: 1px solid #e8eff7;
+  transition: transform 200ms ease;
+  cursor: pointer;
+}
+
+.empresa:last-child {
+  border-right: none;
+}
+
+.empresa:hover {
+  transform: scale(1.08);
+}
+
+.empresa-logo {
+  height: 28px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.5);
+  transition: filter 200ms ease;
+  display: block;
+}
+
+.empresa:hover .empresa-logo {
+  filter: grayscale(0%) opacity(1);
+}
+
+.carrusel:hover .texto {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   VACANTES DESTACADAS
+   ============================================================ */
+.vacantes-container {
+ 
+  padding: 60px 40px;
+  font-family: var(--font-main);
+  min-height: 100vh;
+}
+
+.toolbar {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.title-group h1 {
+  color: var(--color-primary);
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.title-group p {
+  color: var(--color-text-body);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: var(--border-button);
+  border-radius: var(--radius-icon);
+  width: 280px;
+  font-size: 0.95rem;
+  font-family: var(--font-main);
+  outline-color: var(--color-secondary);
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: var(--border-button);
+  border-radius: var(--radius-button);
+  background: var(--white);
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Grid de tarjetas */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.job-card1 {
+  background: var(--color-bg-card);
+  border: var(--border-light);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.job-card1:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(22, 58, 109, 0.08);
+}
+
+.card-header,
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.logo-box {
+  width: 48px;
+  height: 48px;
+  background: var(--white);
+  border: var(--border-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-blue,
+.badge {
+  background: var(--color-badge-primary-bg);
+  color: var(--color-badge-primary-text);
+}
+
+.badge-indigo {
+  background: var(--color-badge-accent-bg);
+  color: var(--color-badge-accent-text);
+}
+
+.job-card1 h3 {
+  color: var(--color-primary);
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.company {
+  color: var(--color-text-body);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.meta-info {
+  display: flex;
+  gap: 15px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 24px;
+  list-style: none;
+  padding: 0;
+}
+
+.btn-details {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: var(--border-button);
+  border-radius: var(--radius-button);
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: all 0.2s;
+}
+
+.btn-details:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--white);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 58, 109, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: var(--white);
+  width: 90%;
+  max-width: 550px;
+  border-radius: 32px;
+  padding: 32px;
+  position: relative;
+  font-family: var(--font-main);
+}
+
+.custom-box {
+  background: #eaf3f7;
+  border: 1px solid #bee3ef;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--white);
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 10px;
+  border: var(--border-button);
+}
+
+.btn-confirm {
+  background: var(--color-primary);
+  color: var(--white);
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover {
+  background: var(--color-secondary);
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  color: var(--color-text-body);
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* ============================================================
+   CARRUSEL
+   ============================================================ */  
+
+   .empresas-confian {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin: 40px 0 20px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: var(--font-main);  
+    }
+
+.icon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.meta-info li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-icon {
+  font-size: 0.9rem;
+}
+
+.close-modal svg {
+  width: 18px;
+  height: 18px;
+}

@@ -1,0 +1,335 @@
+.ti-wrap{ padding: 28px; }
+
+.ti-head h2{ margin: 0; font-size: 22px; }
+.ti-head p{ margin: 6px 0 0; color:#6b7280; font-size: 13px; max-width: 760px; }
+
+.ti-search{
+  margin-top: 16px;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  background:#fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  max-width: 720px;
+}
+
+.ti-ico{ opacity:.65; }
+
+.ti-search input{
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+.ti-grid{
+  margin-top: 18px;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.ti-card{
+  background:#fff;
+  border: 1px solid #eef2f7;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(15,23,42,.06);
+}
+
+.ti-top{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  margin-bottom: 10px;
+}
+
+.ti-avatar{
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display:grid;
+  place-items:center;
+  font-weight: 900;
+  color:#0f172a;
+}
+
+.ti-avatar.big{
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  font-size: 18px;
+}
+
+.ti-avatar.mint{ background:#d1fae5; }
+.ti-avatar.green{ background:#bbf7d0; }
+.ti-avatar.aqua{ background:#cffafe; }
+
+.ti-meta .ti-name{ font-weight: 900; font-size: 14px; }
+.ti-meta .ti-sub{ color:#6b7280; font-size: 12px; margin-top: 2px; }
+
+.ti-name.big{ font-size: 16px; }
+
+.ti-chips{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 12px;
+}
+
+.ti-chip{
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background:#eafaf2;
+  border: 1px solid #c7f9dd;
+  color:#065f46;
+  font-weight: 800;
+}
+
+.ti-sec{ margin-top: 6px; }
+.ti-sec-title{
+  font-size: 10px;
+  font-weight: 900;
+  color:#6b7280;
+  letter-spacing:.35px;
+  margin-bottom: 6px;
+}
+
+.ti-sec-box{
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  background:#f9fafb;
+  border-radius: 12px;
+  font-weight: 700;
+  color:#0f172a;
+  font-size: 13px;
+}
+
+.ti-actions{
+  display:flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ti-btn{
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-size: 12px;
+}
+
+.ti-btn.primary{
+  background:#0f172a;
+  color:#fff;
+}
+
+.ti-btn.ghost{
+  background:#fff;
+  border-color:#e5e7eb;
+  color:#0f172a;
+}
+
+.ti-empty{
+  color:#6b7280;
+  font-size: 13px;
+}
+
+/* Modal layout */
+.ti-modal-top{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  margin-bottom: 12px;
+}
+
+.ti-mini{
+  margin-top: 4px;
+  color:#6b7280;
+  font-size: 12px;
+}
+
+.ti-modal-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.ti-box{
+  border: 1px solid #eef2f7;
+  background:#fff;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.ti-box-title{
+  font-size: 11px;
+  font-weight: 900;
+  color:#6b7280;
+  letter-spacing:.35px;
+  margin-bottom: 8px;
+}
+
+.ti-text{
+  margin: 0;
+  color:#374151;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ti-contact{
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+  color:#374151;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 1000px){
+  .ti-grid{ grid-template-columns: 1fr; }
+  .ti-modal-grid{ grid-template-columns: 1fr; }
+}
+
+/* ===== MODAL ASPIRANTE ===== */
+
+.asp-modal { padding: 4px 2px; }
+
+.asp-top{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.asp-avatar{
+  width:56px;
+  height:56px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  font-size:18px;
+}
+
+.asp-name{ font-weight:900; font-size:16px; }
+.asp-sub{ color:#6b7280; font-size:12px; margin-top:2px; }
+
+.asp-tags{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+
+.asp-tag{
+  font-size:11px;
+  font-weight:900;
+  padding:6px 10px;
+  border-radius:999px;
+}
+
+.asp-tag.green{
+  background:#dcfce7;
+  color:#065f46;
+}
+
+.asp-tag.gray{
+  background:#f3f4f6;
+  color:#374151;
+}
+
+.asp-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.asp-section{
+  font-size:11px;
+  font-weight:900;
+  color:#6b7280;
+  margin-bottom:8px;
+}
+
+.asp-contact{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:13px;
+  color:#374151;
+}
+
+.asp-chips{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.asp-chip{
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#eafaf2;
+  border:1px solid #c7f9dd;
+  color:#065f46;
+  font-weight:900;
+}
+
+.asp-bio{
+  margin-bottom:16px;
+}
+
+.asp-bio p{
+  margin:0;
+  font-size:13px;
+  color:#374151;
+  line-height:1.45;
+}
+
+.asp-cv{
+  margin-bottom:18px;
+}
+
+.asp-cv-box{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  background:#f9fafb;
+  padding:16px;
+  text-align:center;
+  font-size:13px;
+  font-weight:700;
+  color:#374151;
+}
+
+.asp-download{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  color:#059669;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.asp-contact-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#059669;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 10px 20px rgba(5,150,105,.25);
+}
+
+@media (max-width: 900px){
+  .asp-grid{ grid-template-columns:1fr; }
+}

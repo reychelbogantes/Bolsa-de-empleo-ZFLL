@@ -1,0 +1,160 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.headerTitle { font-size: 1.125rem; font-weight: 700; color: #1e293b; }
+
+.btnPrimary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btnPrimary:hover { background: #1e293b; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 768px)  { .grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1280px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+/* Admin card */
+.adminCard { padding: 1.5rem; }
+
+.adminHead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.adminName  { font-weight: 700; color: #0f172a; font-size: 0.9rem; }
+.adminEmail { font-size: 0.75rem; color: #94a3b8; }
+
+.adminMeta { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.metaKey { color: #64748b; }
+
+.roleBadge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.adminActions { display: flex; gap: 0.5rem; }
+
+.btnEdit {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btnEdit:hover { background: #e2e8f0; }
+
+.btnDisabled {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #f8fafc;
+  color: #cbd5e1;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: not-allowed;
+  text-align: center;
+}
+
+.btnDelete {
+  padding: 0.5rem 0.625rem;
+  color: #dc2626;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.12s;
+}
+.btnDelete:hover { background: #fff1f2; }
+
+/* Placeholder card */
+.secCard {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 12rem;
+}
+.secIconWrap {
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 9999px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 0.75rem;
+}
+.secTitle { font-size: 0.875rem; font-weight: 600; color: #64748b; margin: 0 0 0.25rem; }
+.secSub   { font-size: 0.7rem; color: #94a3b8; }
+
+/* Form */
+.formGroup { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
+.label { font-size: 0.8rem; font-weight: 600; color: #374151; }
+.input, .inputSelect {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  background: #fff;
+  color: #0f172a;
+}
+.input:focus, .inputSelect:focus { box-shadow: 0 0 0 2px #bfdbfe; border-color: transparent; }
+
+.btnCancel { padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; color: #475569; background: transparent; border: none; border-radius: 0.5rem; cursor: pointer; }
+.btnCancel:hover { background: #f1f5f9; }
+.btnSave { padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; color: #fff; background: #2563eb; border: none; border-radius: 0.5rem; cursor: pointer; }
+.btnSave:hover { background: #1d4ed8; }

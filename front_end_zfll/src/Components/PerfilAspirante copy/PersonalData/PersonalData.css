@@ -1,0 +1,214 @@
+/* PersonalData.css */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --navy:   #163A6D;
+  --lime:   #B1B900;
+  --teal:   #1988A6;
+  --navy-light: #1e4d8c;
+  --lime-light: #d4dc00;
+}
+
+.pd-wrapper {
+  font-family: 'Gotham', 'DM Sans', sans-serif;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.pd-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+  border-radius: 2rem;
+  padding: 2.5rem;
+  color: #fff;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pd-header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.pd-header h2 { font-size: 1.8rem; font-weight: 800; margin: 0 0 0.25rem; }
+.pd-header p  { font-size: 0.9rem; opacity: 0.8; margin: 0; }
+
+/* ── Photo Upload ───────────────────────────────────── */
+.pd-photo-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #e8edf4;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(22,58,109,0.06);
+}
+
+.pd-avatar {
+  width: 90px; height: 90px;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #e8f0fb 0%, #ddf5fb 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid rgba(25,136,166,0.2);
+}
+
+.pd-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.pd-photo-label {
+  font-size: 0.75rem; font-weight: 700; color: var(--navy);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 0.25rem; display: block;
+}
+
+.pd-photo-desc { font-size: 0.8rem; color: #8090a4; margin-bottom: 0.75rem; }
+
+.pd-photo-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+  border: none; border-radius: 0.75rem;
+  font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.pd-photo-btn:hover { opacity: 0.88; }
+
+/* ── Card ───────────────────────────────────────────── */
+.pd-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 2px 8px rgba(22,58,109,0.06);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.pd-card-title {
+  font-size: 0.8rem; font-weight: 800;
+  color: var(--navy); text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f0f4f8;
+}
+
+.pd-card-title svg { color: var(--teal); }
+
+/* ── Grid ───────────────────────────────────────────── */
+.pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pd-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.pd-full { grid-column: 1 / -1; }
+
+/* ── Field ──────────────────────────────────────────── */
+.pd-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.pd-label {
+  font-size: 0.7rem; font-weight: 700;
+  color: #6b7a90; text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+.pd-input, .pd-select {
+  padding: 0.7rem 1rem;
+  background: #f6f8fb;
+  border: 1.5px solid #e0e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.88rem; color: #1e2d3d;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.pd-input:focus, .pd-select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(25,136,166,0.15);
+  background: #fff;
+}
+
+.pd-input[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Password ───────────────────────────────────────── */
+.pd-password-row {
+  display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;
+}
+
+.pd-password-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.7rem 1.25rem;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff; border: none; border-radius: 0.75rem;
+  font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: opacity 0.2s;
+}
+.pd-password-btn:hover { opacity: 0.88; }
+
+/* ── Consent ────────────────────────────────────────── */
+.pd-consent {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(22,58,109,0.04), rgba(25,136,166,0.04));
+  border-radius: 1rem;
+  border: 1px solid rgba(25,136,166,0.15);
+  cursor: pointer;
+}
+
+.pd-consent input[type="checkbox"] {
+  margin-top: 2px; flex-shrink: 0;
+  accent-color: var(--navy);
+  width: 16px; height: 16px;
+}
+
+.pd-consent-text { font-size: 0.82rem; color: #4a5568; line-height: 1.5; }
+.pd-consent-text strong { color: var(--navy); }
+
+/* ── Save Button ────────────────────────────────────── */
+.pd-save-row {
+  display: flex; justify-content: flex-end; gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.pd-btn-save {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+  color: #fff; border: none; border-radius: 1rem;
+  font-size: 0.9rem; font-weight: 800; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(22,58,109,0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.pd-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(22,58,109,0.4);
+}
+.pd-btn-save:active { transform: translateY(0); }
+
+/* ── Lime accent dot ────────────────────────────────── */
+.pd-accent-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--lime);
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .pd-grid { grid-template-columns: 1fr; }
+  .pd-grid.cols-3 { grid-template-columns: 1fr; }
+  .pd-password-row { grid-template-columns: 1fr; }
+  .pd-header { padding: 1.5rem; }
+  .pd-header h2 { font-size: 1.4rem; }
+}

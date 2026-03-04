@@ -1,0 +1,243 @@
+.gu-wrap {
+  padding: 30px;
+}
+
+.gu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.gu-header h2 {
+  margin: 0;
+}
+
+.gu-header p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.gu-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.gu-card {
+  background: #f9fafb;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.gu-table-head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 15px;
+}
+
+.gu-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.gu-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gu-avatar {
+  width: 40px;
+  height: 40px;
+  background: #dbeafe;
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.gu-name {
+  font-weight: 600;
+}
+
+.gu-mail {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.gu-role {
+  font-size: 12px;
+  background: #e5e7eb;
+  padding: 5px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.gu-role.admin {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.gu-date {
+  font-size: 14px;
+  color: #374151;
+}
+
+.gu-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 8px;
+}
+/* ==========================
+   MODAL NUEVO USUARIO
+========================== */
+.nu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 2px 2px;
+}
+
+.nu-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.nu-field input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+}
+
+.nu-field input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+}
+
+.nu-select {
+  position: relative;
+}
+
+.nu-select select {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+  appearance: none;
+}
+
+.nu-caret {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.nu-pass {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.nu-pass input {
+  border: none;
+  background: transparent;
+  padding: 0;
+  outline: none;
+  width: 100%;
+}
+
+.nu-lock {
+  opacity: .7;
+}
+
+.nu-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nu-cancel {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #374151;
+}
+
+.nu-submit {
+  flex: 1;
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(37,99,235,.22);
+}
+
+.nu-submit:active {
+  transform: translateY(1px);
+}
+.nu-error{
+  font-size: 13px;
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.del-wrap { padding-top: 6px; }
+.del-text { margin: 0 0 14px; color: #374151; font-size: 14px; line-height: 1.4; }
+.del-sub { color: #6b7280; font-size: 13px; }
+.del-actions { display: flex; gap: 12px; margin-top: 8px; }
+.del-danger {
+  flex: 1;
+  background: #dc2626;
+  border: none;
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(220,38,38,.22);
+}
+.del-danger:active { transform: translateY(1px); }

@@ -1,0 +1,161 @@
+.grid4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px)  { .grid4 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .grid4 { grid-template-columns: repeat(4, 1fr); } }
+
+.gridMain {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) { .gridMain { grid-template-columns: 2fr 1fr; } }
+
+.statCard {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statIcon {
+  padding: 0.75rem;
+  border-radius: 0.625rem;
+  flex-shrink: 0;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 0.15rem;
+}
+
+/* Color tokens */
+.blue   { background: #eff6ff; color: #2563eb; }
+.indigo { background: #eef2ff; color: #4f46e5; }
+.green  { background: #f0fdf4; color: #16a34a; }
+.amber  { background: #fffbeb; color: #d97706; }
+
+.cardHeader {
+  padding: 1.25rem 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.cardTitle {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.seeAll {
+  font-size: 0.8rem;
+  color: #2563eb;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.seeAll:hover { text-decoration: underline; }
+
+/* Table */
+.table {
+  width: 100%;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.table thead tr {
+  background: #f8fafc;
+}
+
+.table th {
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  color: #64748b;
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+.table td {
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid #f1f5f9;
+  color: #374151;
+}
+
+.table tbody tr:hover { background: #f8fafc; }
+
+.tdName { font-weight: 600; color: #0f172a; }
+
+.reviewBtn {
+  color: #2563eb;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.reviewBtn:hover { text-decoration: underline; }
+
+/* Audit list */
+.auditList {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auditItem {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  border: 1px solid #f1f5f9;
+}
+
+.auditDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  margin-top: 0.35rem;
+  flex-shrink: 0;
+}
+
+.dotBlue   { background: #3b82f6; }
+.dotAmber  { background: #f59e0b; }
+
+.auditAction {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.auditMeta {
+  font-size: 0.75rem;
+  color: #475569;
+  margin-top: 0.15rem;
+}
+
+.auditTime {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+  letter-spacing: 0.04em;
+}

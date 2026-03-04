@@ -1,0 +1,489 @@
+.ige-wrap{ padding: 26px; }
+
+.ige-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 16px;
+}
+
+.ige-head h2{ margin:0; font-size:22px; }
+.ige-head p{ margin:6px 0 0; color:#6b7280; font-size:13px; }
+
+.ige-head-actions{ display:flex; gap: 10px; }
+
+.ige-btn{
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 900;
+  border: 1px solid transparent;
+  cursor:pointer;
+  font-size: 12px;
+}
+
+.ige-btn.light{
+  background:#fff;
+  border-color:#e5e7eb;
+  color:#0f172a;
+}
+
+.ige-btn.blue{
+  background:#2563eb;
+  color:#fff;
+  box-shadow: 0 10px 20px rgba(37,99,235,.22);
+}
+
+.ige-card{
+  margin-top: 16px;
+  background:#fff;
+  border:1px solid #eef2f7;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 26px rgba(15,23,42,.06);
+}
+
+.ige-toprow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ige-leftTitle{
+  font-weight: 900;
+  color:#0f172a;
+}
+
+.ige-filters{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.ige-select{ position:relative; }
+.ige-select select{
+  appearance:none;
+  border:1px solid #e5e7eb;
+  background:#f9fafb;
+  padding:10px 36px 10px 12px;
+  border-radius: 12px;
+  font-weight:800;
+  font-size: 12px;
+  outline:none;
+}
+.ige-caret{
+  position:absolute;
+  right: 12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#6b7280;
+  pointer-events:none;
+}
+
+.ige-iconBtn{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  cursor:pointer;
+}
+
+.ige-search{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  min-width: 220px;
+}
+.ige-search input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:12px;
+}
+.ige-searchIco{ opacity:.6; }
+
+.ige-pill{
+  background:#0f172a;
+  color:#fff;
+  border:none;
+  padding: 9px 12px;
+  border-radius: 12px;
+  cursor:pointer;
+  font-weight:900;
+  font-size: 12px;
+}
+
+.ige-th, .ige-tr{
+  display:grid;
+  grid-template-columns: 1.3fr 1fr 1.2fr 1.2fr .7fr .6fr;
+  gap: 12px;
+  align-items:center;
+}
+
+.ige-th{
+  color:#6b7280;
+  font-size:11px;
+  font-weight:900;
+  padding: 10px 6px;
+  border-bottom:1px solid #eef2f7;
+}
+
+.ige-tr{
+  padding: 12px 6px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+.ige-user{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+
+.ige-avatar{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background:#dbeafe;
+  color:#1e40af;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.ige-name{ font-weight:900; font-size: 13px; }
+.ige-mail{ color:#6b7280; font-size: 11px; margin-top: 2px; }
+
+.ige-career{ font-weight:800; font-size: 12px; color:#0f172a; }
+
+.ige-chips{ display:flex; flex-wrap:wrap; gap: 6px; }
+.ige-chip{
+  font-size: 10px;
+  font-weight: 900;
+  padding: 5px 8px;
+  border-radius: 999px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.ige-chip.soft{ background:#f1f5f9; border-color:#e2e8f0; color:#334155; }
+.ige-chip.hard{ background:#dbeafe; border-color:#bfdbfe; color:#1d4ed8; }
+
+.ige-badge{
+  font-size: 10px;
+  font-weight: 900;
+  padding: 6px 10px;
+  border-radius: 999px;
+  display:inline-block;
+}
+
+.ige-badge.ok{ background:#dcfce7; color:#065f46; }
+.ige-badge.mid{ background:#e0f2fe; color:#075985; }
+.ige-badge.off{ background:#f3f4f6; color:#374151; }
+
+.ige-actions{ display:flex; gap: 8px; justify-content:flex-end; }
+.ige-act{
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  cursor:pointer;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .ige-head{ flex-direction:column; }
+  .ige-filters{ flex-wrap:wrap; }
+  .ige-th{ display:none; }
+  .ige-tr{
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 10px;
+  }
+  .ige-actions{ justify-content:flex-start; }
+}
+
+.manual-form { margin-top: 6px; }
+
+.manual-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.manual-field{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+}
+
+.manual-field label{
+  font-size: 11px;
+  font-weight: 900;
+  color: #6b7280;
+}
+
+.manual-field input,
+.manual-field select,
+.manual-field textarea{
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  font-size: 13px;
+  outline: none;
+}
+
+.manual-field.full{
+  grid-column: 1 / -1;
+  margin-top: 10px;
+}
+
+.manual-actions{
+  display:flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.manual-cancel{
+  background: #f3f4f6;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.manual-submit{
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+@media (max-width: 768px){
+  .manual-grid{ grid-template-columns: 1fr; }
+}
+
+/* ====== TABLA ESTABLE (NO SE MUEVE) ====== */
+.ige-th,
+.ige-tr{
+  display:grid;
+  /* columnas fijas para evitar que el contenido empuje */
+  grid-template-columns: 260px 150px 1fr 1fr 120px 90px;
+  gap: 14px;
+  align-items:center;
+}
+
+.ige-th{
+  color:#6b7280;
+  font-size:11px;
+  font-weight:900;
+  padding: 10px 6px;
+  border-bottom:1px solid #eef2f7;
+  letter-spacing: .35px;
+}
+
+.ige-tr{
+  padding: 14px 6px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+/* ===== EGRESADO: avatar + nombre/correo sin empujar ===== */
+.ige-user{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  min-width: 0; /* importantísimo para ellipsis */
+}
+
+.ige-userText{
+  min-width: 0;
+  display:flex;
+  flex-direction:column;
+  gap: 3px;
+}
+
+/* nombre clickeable */
+.ige-nameBtn{
+  padding:0;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  text-align:left;
+  font-weight:900;
+  font-size: 13px;
+  color:#0f172a;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ige-nameBtn:hover{
+  text-decoration: underline;
+}
+
+/* correo NO debe crecer */
+.ige-mail{
+  color:#6b7280;
+  font-size: 11px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* carrera estable */
+.ige-career{
+  font-weight:800;
+  font-size:12px;
+  color:#0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* chips: controlan el espacio y no “rompen” columnas */
+.ige-chips{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ige-chip{
+  font-size: 10px;
+  font-weight: 900;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border:1px solid transparent;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ige-chip.soft{ background:#f1f5f9; border-color:#e2e8f0; color:#334155; }
+.ige-chip.hard{ background:#dbeafe; border-color:#bfdbfe; color:#1d4ed8; }
+
+/* estado ancho fijo */
+.ige-status{
+  display:flex;
+  justify-content:flex-start;
+}
+
+.ige-badge{
+  font-size: 10px;
+  font-weight: 900;
+  padding: 7px 12px;
+  border-radius: 999px;
+  display:inline-block;
+  white-space: nowrap;
+}
+
+.ige-badge.ok{ background:#dcfce7; color:#065f46; }
+.ige-badge.mid{ background:#e0f2fe; color:#075985; }
+.ige-badge.off{ background:#f3f4f6; color:#374151; }
+
+/* acciones ancho fijo */
+.ige-actions{
+  display:flex;
+  gap: 10px;
+  justify-content:flex-end;
+}
+
+.ige-act{
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  cursor:pointer;
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .ige-th{ display:none; }
+  .ige-tr{
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 10px;
+  }
+  .ige-actions{ justify-content:flex-start; }
+}
+
+/* ====== TABLA ESTABLE (NO SE MUEVE) ====== */
+.ige-th,
+.ige-tr{
+  display:grid;
+  grid-template-columns: 260px 150px 1fr 1fr 120px 90px;
+  gap: 14px;
+  align-items:center;
+}
+
+.ige-user{ min-width: 0; }
+.ige-userText{ min-width:0; }
+
+.ige-nameBtn{
+  padding:0;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  text-align:left;
+  font-weight:900;
+  font-size: 13px;
+  color:#0f172a;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ige-nameBtn:hover{ text-decoration: underline; }
+
+.ige-mail{
+  color:#6b7280;
+  font-size: 11px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ige-career{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== MODAL PERFIL ===== */
+.egp-wrap{ padding: 4px 2px; }
+.egp-top{ display:flex; gap:12px; align-items:center; margin-bottom: 14px; }
+.egp-avatar{
+  width: 54px; height: 54px; border-radius: 16px;
+  background:#dbeafe; color:#1e40af;
+  display:grid; place-items:center;
+  font-weight:900; font-size:18px;
+}
+.egp-name{ font-weight:900; font-size:16px; }
+.egp-sub{ color:#6b7280; font-size:12px; margin-top:2px; }
+.egp-meta{ margin-top:6px; font-size:11px; font-weight:900; color:#0f172a; opacity:.8; }
+.egp-grid{ display:grid; grid-template-columns: 1fr; gap: 12px; }
+.egp-box{ border:1px solid #eef2f7; border-radius: 14px; padding: 12px; background:#fff; }
+.egp-title{ font-size:11px; font-weight:900; color:#6b7280; margin-bottom: 8px; }
+.egp-line{ font-size:13px; color:#374151; }
+.egp-chips{ display:flex; flex-wrap:wrap; gap: 8px; }
+.egp-chip{ font-size:10px; font-weight:900; padding:6px 10px; border-radius:999px; border:1px solid transparent; }
+.egp-chip.soft{ background:#f1f5f9; border-color:#e2e8f0; color:#334155; }
+.egp-chip.hard{ background:#dbeafe; border-color:#bfdbfe; color:#1d4ed8; }

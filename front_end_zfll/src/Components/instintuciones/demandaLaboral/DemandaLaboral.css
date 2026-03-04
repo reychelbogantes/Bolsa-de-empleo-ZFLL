@@ -1,0 +1,338 @@
+:root{
+  --dl-blue:#3b82f6;
+  --dl-green:#22c55e;
+  --dl-purple:#8b5cf6;
+  --dl-orange:#f59e0b;
+
+  --dl-bg:#f6f8fc;
+  --dl-card:#ffffff;
+  --dl-border:#edf1f7;
+  --dl-shadow:0 10px 25px rgba(15,23,42,.06);
+  --dl-text:#0f172a;
+  --dl-sub:#64748b;
+}
+
+.dl-wrap{
+  padding: 18px;
+  background: var(--dl-bg);
+  min-height: 100%;
+}
+
+.dl-top{
+  margin-bottom: 14px;
+}
+.dl-title{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--dl-text);
+}
+.dl-subtitle{
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--dl-sub);
+}
+
+/* grids */
+.dl-gridTop{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+.dl-gridBottom{
+  display: grid;
+  grid-template-columns: 1.5fr 0.9fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 1050px){
+  .dl-gridTop{ grid-template-columns: 1fr; }
+  .dl-gridBottom{ grid-template-columns: 1fr; }
+}
+
+/* cards */
+.dl-card{
+  background: var(--dl-card);
+  border: 1px solid var(--dl-border);
+  border-radius: 18px;
+  box-shadow: var(--dl-shadow);
+}
+.dl-cardPad{
+  padding: 18px;
+}
+.dl-cardHead{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.dl-cardTitle{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--dl-text);
+}
+.dl-chartArea{
+  width: 100%;
+}
+
+/* pills */
+.dl-pill{
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #eef2ff;
+  color: #2563eb;
+  white-space: nowrap;
+}
+.dl-pill.green{
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+.dl-footNote{
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--dl-sub);
+  font-style: italic;
+}
+
+/* stat box */
+.dl-statBox{
+  margin-top: 10px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dl-statK{
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--dl-sub);
+}
+.dl-statV{
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--dl-text);
+  line-height: 1.1;
+}
+.dl-statRight{
+  text-align: right;
+}
+.dl-statDelta{
+  font-size: 12px;
+  font-weight: 900;
+  color: #16a34a;
+}
+.dl-statSub{
+  font-size: 11px;
+  color: var(--dl-sub);
+}
+
+/* profile panel */
+.dl-profile{
+  background: linear-gradient(180deg, #0b1220 0%, #0b1426 100%);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(2,6,23,.18);
+  padding: 16px 16px 18px;
+  border: 1px solid rgba(148,163,184,.16);
+  color: #e2e8f0;
+}
+.dl-profileHead{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.dl-star{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(59,130,246,.18);
+  color: #60a5fa;
+  font-weight: 900;
+}
+.dl-profileTitle{
+  font-weight: 900;
+  font-size: 14px;
+}
+.dl-profileBody{
+  margin-top: 10px;
+}
+
+.dl-pr{
+  margin-bottom: 16px;
+}
+.dl-prTop{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.dl-prLabel{
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .6px;
+  color: #e2e8f0;
+}
+.dl-prPct{
+  font-size: 11px;
+  font-weight: 900;
+}
+.dl-prPct.blue{ color: #60a5fa; }
+.dl-prPct.green{ color: #34d399; }
+.dl-prPct.purple{ color: #a78bfa; }
+.dl-prPct.orange{ color: #fbbf24; }
+
+.dl-prTrack{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148,163,184,.25);
+  overflow: hidden;
+}
+.dl-prFill{
+  height: 100%;
+}
+.dl-prFill.blue{ background: var(--dl-blue); }
+.dl-prFill.green{ background: var(--dl-green); }
+.dl-prFill.purple{ background: var(--dl-purple); }
+.dl-prFill.orange{ background: var(--dl-orange); }
+
+.dl-prNote{
+  margin-top: 6px;
+  font-size: 10px;
+  color: rgba(226,232,240,.78);
+}
+
+.dl-profileDivider{
+  height: 1px;
+  background: rgba(148,163,184,.18);
+  margin: 14px 0;
+}
+.dl-profileNote{
+  margin: 0;
+  font-size: 11px;
+  color: rgba(226,232,240,.78);
+  line-height: 1.45;
+}
+
+/* ===== extras para versión sin recharts ===== */
+.dl-bars{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  margin-top: 8px;
+}
+.dl-barRow{
+  display:grid;
+  grid-template-columns: 150px 1fr;
+  gap: 12px;
+  align-items:center;
+}
+.dl-barLabel{
+  font-size: 11px;
+  color: var(--dl-sub);
+  font-weight: 700;
+}
+.dl-barTrack{
+  height: 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  border: 1px solid #e5e7eb;
+  overflow:hidden;
+}
+.dl-barFill{
+  height: 100%;
+  background: var(--dl-blue);
+  border-radius: 999px;
+}
+
+.dl-donutWrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 12px;
+  padding-top: 6px;
+}
+.dl-donut{
+  width: 200px;
+  height: 200px;
+  border-radius: 999px;
+  position: relative;
+  border: 1px solid #eef2f7;
+}
+.dl-donut::after{
+  content:"";
+  position:absolute;
+  inset: 30px;
+  border-radius: 999px;
+  background: #fff;
+}
+.dl-legend{
+  width: 100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 2px;
+}
+.dl-legItem{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--dl-sub);
+  font-weight: 700;
+}
+.dl-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display:inline-block;
+}
+.dl-dot.blue{ background: var(--dl-blue); }
+.dl-dot.green{ background: var(--dl-green); }
+.dl-dot.purple{ background: var(--dl-purple); }
+.dl-dot.orange{ background: var(--dl-orange); }
+
+.dl-monthBars{
+  display:flex;
+  gap: 14px;
+  align-items:flex-end;
+  padding: 8px 8px 0;
+  height: 180px;
+}
+.dl-monthCol{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 8px;
+  width: 48px;
+}
+.dl-monthStack{
+  display:flex;
+  align-items:flex-end;
+  gap: 8px;
+  height: 150px;
+}
+.dl-monthBar{
+  width: 18px;
+  border-radius: 10px 10px 0 0;
+}
+.dl-monthBar.empresas{ background: var(--dl-blue); }
+.dl-monthBar.instituciones{ background: var(--dl-purple); }
+.dl-monthLabel{
+  font-size: 11px;
+  color: var(--dl-sub);
+  font-weight: 800;
+}

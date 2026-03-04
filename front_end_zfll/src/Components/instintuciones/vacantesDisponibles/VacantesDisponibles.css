@@ -1,0 +1,583 @@
+/* ===== Vacantes Disponibles (Institución) ===== */
+
+:root{
+  --border: #e8eef6;
+  --muted: #94a3b8;
+  --bg: #f6f9ff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --blue: #2563eb;
+}
+
+/* contenedor */
+.vd-wrap{
+  padding: 26px;
+}
+
+/* header */
+.vd-head h2{
+  margin:0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+}
+.vd-head p{
+  margin:6px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* caja grande */
+.vd-card{
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 26px rgba(15,23,42,.05);
+}
+
+/* search pill */
+.vd-search{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  border:1px solid #dbe7f6;
+  background: #fbfdff;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.vd-search span{
+  opacity: .55;
+}
+
+.vd-search input{
+  width: 100%;
+  border:none;
+  outline:none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.vd-search input::placeholder{
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+/* grid cards */
+.vd-grid{
+  margin-top: 16px;
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* job card */
+.vd-job{
+  background:#fff;
+  border: 1px solid #edf2fa;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 18px rgba(15,23,42,.03);
+  transition: .16s ease;
+}
+
+.vd-job:hover{
+  transform: translateY(-2px);
+  border-color: #dbeafe;
+}
+
+/* top row */
+.vd-top{
+  display:flex;
+  gap: 12px;
+  align-items:flex-start;
+}
+
+.vd-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border:1px solid #e5e7eb;
+  display:grid;
+  place-items:center;
+  font-weight: 900;
+  color: #2563eb;
+}
+
+/* title + company */
+.vd-title{
+  font-size: 13px;
+  font-weight: 900;
+  color: #1d4ed8;
+  line-height: 1.15;
+  max-height: 2.3em;
+  overflow: hidden;
+}
+
+.vd-company{
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .9px;
+  color: #94a3b8;
+}
+
+/* meta */
+.vd-meta{
+  margin-top: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+
+.vd-row{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-size: 11px;
+  color: #334155;
+  font-weight: 800;
+  opacity: .9;
+}
+
+/* button */
+.vd-btn{
+  width:100%;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-weight: 900;
+  font-size: 12px;
+  cursor:pointer;
+  color: #374151;
+  transition: .16s ease;
+}
+
+.vd-btn:hover{
+  background:#f8fafc;
+}
+
+/* loading */
+.vd-loading{
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px dashed #dbe7f6;
+  color: #64748b;
+  font-weight: 900;
+}
+
+/* modal (si lo usas) */
+.vdm-wrap{
+  padding: 4px 2px;
+}
+.vdm-wrap h3{
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 900;
+}
+.vdm-wrap p{
+  margin: 4px 0;
+  font-size: 13px;
+  color: #374151;
+}
+.vdm-sec{
+  margin-top: 12px;
+  border-top: 1px solid #eef2f7;
+  padding-top: 10px;
+}
+.vdm-sec h4{
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #6b7280;
+}
+.vdm-sec ul{
+  margin: 0;
+  padding-left: 18px;
+  color: #374151;
+  font-size: 13px;
+}
+.vdm-apply{
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 14px;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .vd-grid{ grid-template-columns: 1fr; }
+}
+
+/* ===== MODAL: Detalles de la Vacante (como mock) ===== */
+.vdd-wrap{
+  padding: 4px 2px;
+}
+
+.vdd-top{
+  display:flex;
+  gap: 16px;
+  align-items:center;
+  padding: 6px 2px 12px;
+}
+
+.vdd-avatar{
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background:#eff6ff;
+  border:1px solid #dbeafe;
+  color:#1d4ed8;
+  display:grid;
+  place-items:center;
+  font-weight: 900;
+  font-size: 22px;
+  flex: 0 0 auto;
+}
+
+.vdd-main{ min-width:0; }
+
+.vdd-title{
+  font-weight: 900;
+  font-size: 18px;
+  color:#0f172a;
+  line-height: 1.1;
+}
+
+.vdd-sub{
+  margin-top: 4px;
+  color:#64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.vdd-dot{
+  font-weight: 900;
+  color:#94a3b8;
+}
+
+.vdd-link{
+  display:inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  color:#2563eb;
+  text-decoration:none;
+}
+.vdd-link:hover{ text-decoration:underline; }
+
+/* meta */
+.vdd-meta{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 6px;
+  padding: 4px 2px 12px;
+}
+
+.vdd-metaLbl{
+  font-size: 10px;
+  font-weight: 900;
+  color:#94a3b8;
+  letter-spacing: .6px;
+}
+
+.vdd-metaVal{
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 900;
+  color:#0f172a;
+}
+
+/* secciones */
+.vdd-sec{
+  margin-top: 10px;
+}
+
+.vdd-secLbl{
+  font-size: 10px;
+  font-weight: 900;
+  color:#94a3b8;
+  letter-spacing: .6px;
+  margin-bottom: 8px;
+}
+
+.vdd-descBox{
+  border: 1px solid #eef2f7;
+  background: #fbfdff;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 13px;
+  color:#475569;
+  line-height: 1.5;
+}
+
+/* chips requisitos */
+.vdd-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+}
+
+.vdd-chip{
+  background:#e0edff;
+  border:1px solid #bfdbfe;
+  color:#1d4ed8;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 7px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* CTA */
+.vdd-cta{
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 14px;
+  background: #2563eb;
+  color:#fff;
+  font-weight: 900;
+  cursor:pointer;
+  box-shadow: 0 14px 26px rgba(37,99,235,.22);
+}
+
+.vdd-cta:hover{
+  filter: brightness(0.98);
+}
+
+/* responsive */
+@media (max-width: 700px){
+  .vdd-meta{ grid-template-columns: 1fr; }
+}
+/* ============================
+   MODAL RECOMENDAR ESTUDIANTES
+============================ */
+
+.rec-wrap{
+  padding: 6px 4px 4px;
+}
+
+/* Subtitulo */
+.rec-subtitle{
+  font-size: 12px;
+  color:#475569;
+  margin-bottom: 10px;
+}
+
+/* Texto ayuda */
+.rec-help{
+  font-size: 12px;
+  color:#64748b;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.rec-label{
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .7px;
+  color:#94a3b8;
+  margin-bottom: 8px;
+}
+
+/* Textarea */
+.rec-textarea{
+  width:100%;
+  border:1px solid #e5e7eb;
+  background:#f8fafc;
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 13px;
+  outline:none;
+  resize:none;
+  color:#0f172a;
+}
+
+.rec-textarea:focus{
+  border-color:#2563eb;
+  background:#ffffff;
+}
+
+/* Header estudiantes */
+.rec-rowHead{
+  margin-top: 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+/* Buscador pequeño */
+.rec-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  min-width: 240px;
+}
+
+.rec-search input{
+  border:none;
+  outline:none;
+  font-size:12px;
+  width:100%;
+}
+
+.rec-searchIco{
+  opacity:.5;
+}
+
+/* Lista */
+.rec-list{
+  margin-top: 14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* Item tipo tarjeta */
+.rec-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  border-radius: 16px;
+  border:1px solid #eef2f7;
+  background:#ffffff;
+  transition:.15s ease;
+}
+
+.rec-item:hover{
+  background:#f8fafc;
+}
+
+/* Lado izquierdo */
+.rec-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.rec-left input{
+  width:18px;
+  height:18px;
+  accent-color:#2563eb;
+}
+
+/* Info */
+.rec-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.rec-name{
+  font-size:13px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.rec-career{
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.7px;
+  color:#94a3b8;
+  margin-top:2px;
+}
+
+/* Acciones derecha */
+.rec-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.rec-eye{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+  cursor:pointer;
+}
+
+.rec-pill{
+  border:none;
+  background:#2563eb;
+  color:#ffffff;
+  font-size:11px;
+  font-weight:900;
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+/* Footer */
+.rec-footer{
+  margin-top: 20px;
+  display:flex;
+  gap:12px;
+}
+
+/* Botones */
+.rec-cancel{
+  flex:1;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.rec-send{
+  flex:1;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-weight:900;
+  background:#cbd5e1;
+  color:#ffffff;
+  cursor:not-allowed;
+}
+
+/* Activo */
+.rec-send.on{
+  background:#2563eb;
+  cursor:pointer;
+  box-shadow:0 12px 24px rgba(37,99,235,.25);
+}
+
+/* Responsive */
+@media (max-width: 720px){
+  .rec-rowHead{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .rec-search{
+    width:100%;
+  }
+
+  .rec-footer{
+    flex-direction:column;
+  }
+}

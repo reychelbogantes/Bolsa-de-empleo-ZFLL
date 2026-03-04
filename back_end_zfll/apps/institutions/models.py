@@ -14,7 +14,7 @@ class Institucion(models.Model):
         verbose_name="Tipo de institución",
     )
     ubicacion = models.CharField("Ubicación", max_length=255, blank=True)
-    activa = models.BooleanField(default=True)
+    activa = models.BooleanField(default=False)
     extra_data = models.JSONField(default=dict, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -35,6 +35,14 @@ class ProgramaFormacion(models.Model):
     class Meta:
         db_table = "programas_formacion"
         verbose_name = "Programa de formación"
-
+""" 
     def __str__(self):
         return f"{self.nombre} ({self.institucion.nombre})"
+
+        const token =
+        localStorage.getItem("access_token") ||
+        localStorage.getItem("admin_access_token") ||
+        localStorage.getItem("empresa_access_token");
+
+        if (!token) return; // no llames /notifications/count/
+ """

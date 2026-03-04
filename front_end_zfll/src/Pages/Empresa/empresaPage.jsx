@@ -1,12 +1,11 @@
 import React from 'react'
 import "./empresaPage.css"
-import Vacantes from '../../Components/empresa/vacantes/Vacantes'
+import PrincipalEmpresa from '../../Components/empresa/principalEmpresa/PrincipalEmpresa'
 
 function EmpresaPage() {
   return (
     <div className="empresa-page">
-      <h1>Empresa</h1>
-      <Vacantes />
+      <PrincipalEmpresa />
     </div>
   )
 }
