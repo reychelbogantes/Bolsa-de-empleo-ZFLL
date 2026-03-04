@@ -1,99 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./PerfilEmpresa.css";
 import Swal from "sweetalert2";
-import { getEmpresaMe, updateEmpresaMe } from "../../../Services/Empresa/empresaService";
-import { getSectoresIndustriales, getTamanosEmpresa } from "../../../Services/Admin/catalogsService";
 
 export default function PerfilEmpresa() {
-  const [loading, setLoading] = useState(true);
-  const [catalogs, setCatalogs] = useState({ sectores: [], tamanos: [] });
-  const [form, setForm] = useState({
-    nombre: "",
-    ubicacion: "",
-    descripcion: "",
-    proceso_contratacion: "",
-    contacto_interesados: "",
-    contacto_admin: "",
-    tiene_url_externa: false,
-    url_externa: "",
-    sector: "",
-    tamano_empresa: "",
-    telefono: "",
-    correo: "",
-    tagline: "",
+  const [loading] = useState(false);
+
+  // ✅ CATALOGOS QUEMADOS
+  const [catalogs] = useState({
+    sectores: [
+      { id: 1, nombre: "Dispositivos Médicos" },
+      { id: 2, nombre: "Tecnología" },
+      { id: 3, nombre: "Manufactura" },
+      { id: 4, nombre: "Servicios" },
+    ],
+    tamanos: [
+      { id: 1, nombre: "1-10" },
+      { id: 2, nombre: "11-50" },
+      { id: 3, nombre: "51-200" },
+      { id: 4, nombre: "201-500" },
+      { id: 5, nombre: "500+" },
+    ],
   });
+
+  // ✅ DATOS QUEMADOS (como si vinieran del backend)
+  const [form, setForm] = useState({
+    nombre: "Medtronic",
+    ubicacion: "Cartago, Costa Rica",
+    descripcion:
+      "Empresa líder en innovación y fabricación de dispositivos médicos, comprometida con la calidad y el talento humano.",
+    proceso_contratacion:
+      "1) Revisión de CV  2) Entrevista HR  3) Entrevista técnica  4) Oferta y onboarding.",
+    contacto_interesados: "talento@medtronic.com",
+    contacto_admin: "admin@medtronic.com",
+    tiene_url_externa: true,
+    url_externa: "https://www.medtronic.com",
+    sector: "1",
+    tamano_empresa: "5",
+    telefono: "+506 2550-2111",
+    correo: "talento@medtronic.com",
+    tagline: "Dispositivos Médicos • Cartago, CR",
+  });
+
   const onChange = (key) => (e) =>
-    setForm((prev) => ({ ...prev, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
-  const load = async () => {
-    setLoading(true);
-    try {
-      const [me, sectores, tamanos] = await Promise.all([
-        getEmpresaMe(),
-        getSectoresIndustriales(),
-        getTamanosEmpresa(),
-      ]);
+    setForm((prev) => ({
+      ...prev,
+      [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
+    }));
 
-      const data = me?.data || {};
-      const extra = data?.extra_data || {};
-
-      setCatalogs({
-        sectores: sectores?.data?.results ?? sectores?.data ?? [],
-        tamanos: tamanos?.data?.results ?? tamanos?.data ?? [],
-      });
-
-      setForm({
-        nombre: data?.nombre || "",
-        ubicacion: data?.ubicacion || "",
-        descripcion: data?.descripcion || "",
-        proceso_contratacion: data?.proceso_contratacion || "",
-        contacto_interesados: data?.contacto_interesados || "",
-        contacto_admin: data?.contacto_admin || "",
-        tiene_url_externa: !!data?.tiene_url_externa,
-        url_externa: data?.url_externa || "",
-        sector: data?.sector ? String(data.sector) : "",
-        tamano_empresa: data?.tamano_empresa ? String(data.tamano_empresa) : "",
-        telefono: extra?.telefono || "",
-        correo: extra?.correo || "",
-        tagline: extra?.tagline || "",
-      });
-    } catch {
-      Swal.fire({ icon: "error", title: "Error", text: "No se pudo cargar tu perfil de empresa." });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { load(); }, []);
-
+  // ✅ GUARDAR MOCK (sin backend)
   const save = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      nombre: form.nombre,
-      ubicacion: form.ubicacion,
-      descripcion: form.descripcion,
-      proceso_contratacion: form.proceso_contratacion,
-      contacto_interesados: form.contacto_interesados,
-      contacto_admin: form.contacto_admin,
-      tiene_url_externa: !!form.tiene_url_externa,
-      url_externa: form.url_externa || "",
-      sector: form.sector ? Number(form.sector) : null,
-      tamano_empresa: form.tamano_empresa ? Number(form.tamano_empresa) : null,
-      extra_data: {
-        telefono: form.telefono,
-        correo: form.correo,
-        tagline: form.tagline,
-      },
-    };
+    // Aquí solo mostramos lo que se “guardaría”
+    console.log("✅ Guardado (mock):", form);
 
-    try {
-      await updateEmpresaMe(payload);
-      Swal.fire({ icon: "success", title: "Guardado", text: "Perfil actualizado." });
-      load();
-    } catch (err) {
-      const msg = err?.response?.data ? JSON.stringify(err.response.data) : "Revisa el backend.";
-      Swal.fire({ icon: "error", title: "No se pudo guardar", text: msg });
-    }
+    Swal.fire({
+      icon: "success",
+      title: "Guardado",
+      text: "Perfil actualizado (mock).",
+      confirmButtonColor: "#2563eb",
+    });
   };
 
   return (
@@ -113,6 +79,7 @@ export default function PerfilEmpresa() {
 
           <div className="pe-topInfo">
             <div className="pe-name">{loading ? "Cargando..." : form.nombre || "—"}</div>
+
             <div className="pe-sub">
               <input
                 value={form.tagline}
@@ -151,7 +118,11 @@ export default function PerfilEmpresa() {
 
           <div className="pe-field">
             <label>PROCESO CONTRATACIÓN</label>
-            <textarea value={form.proceso_contratacion} onChange={onChange("proceso_contratacion")} rows={4} />
+            <textarea
+              value={form.proceso_contratacion}
+              onChange={onChange("proceso_contratacion")}
+              rows={4}
+            />
           </div>
         </div>
 
@@ -161,7 +132,9 @@ export default function PerfilEmpresa() {
             <select value={form.sector} onChange={onChange("sector")}>
               <option value="">—</option>
               {catalogs.sectores.map((x) => (
-                <option key={x.id} value={x.id}>{x.nombre}</option>
+                <option key={x.id} value={x.id}>
+                  {x.nombre}
+                </option>
               ))}
             </select>
           </div>
@@ -171,7 +144,9 @@ export default function PerfilEmpresa() {
             <select value={form.tamano_empresa} onChange={onChange("tamano_empresa")}>
               <option value="">—</option>
               {catalogs.tamanos.map((x) => (
-                <option key={x.id} value={x.id}>{x.nombre}</option>
+                <option key={x.id} value={x.id}>
+                  {x.nombre}
+                </option>
               ))}
             </select>
           </div>

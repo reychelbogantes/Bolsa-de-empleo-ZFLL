@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus, Trash2, Shield } from 'lucide-react';
 import Card from './Card/Card';
 import Modal from './Modal/Modal';
 import styles from './Admins.module.css';
-import { getAdmins, createAdmin, updateAdmin, deleteAdmin } from '../../Services/Admin/adminService';
-import { MOCK_ADMINS } from '../../constants'; // Reemplazar con datos reales al integrar API
+/* import { getAdmins, createAdmin, updateAdmin, deleteAdmin } from '../../Services/Admin/adminService';
+ */import { MOCK_ADMINS } from '../../constants'; // Reemplazar con datos reales al integrar API
 
 const Admins = () => {
   const [admins, setAdmins]           = useState(MOCK_ADMINS);
@@ -14,40 +14,30 @@ const Admins = () => {
   const [form, setForm]               = useState({});
   const [loading, setLoading]         = useState(false);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     getAdmins()
       .then(data => setAdmins(data.items || data))
       .catch(() => {});
   }, []);
 
   const field = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
+ */
+ const handleCreate = () => {
+  const newAdmin = { ...form, id: Date.now(), lastLogin: 'Nunca' };
+  setAdmins(prev => [...prev, newAdmin]);
+  setIsNewOpen(false);
+  setForm({});
+};
 
-  const handleCreate = async () => {
-    setLoading(true);
-    try {
-      const created = await createAdmin(form);
-      setAdmins(prev => [...prev, created]);
-      setIsNewOpen(false);
-      setForm({});
-    } catch {} finally { setLoading(false); }
-  };
+const handleUpdate = () => {
+  setAdmins(prev => prev.map(a => a.id === selected.id ? { ...a, ...form } : a));
+  setIsEditOpen(false);
+};
 
-  const handleUpdate = async () => {
-    setLoading(true);
-    try {
-      const updated = await updateAdmin(selected.id, form);
-      setAdmins(prev => prev.map(a => a.id === updated.id ? updated : a));
-      setIsEditOpen(false);
-    } catch {} finally { setLoading(false); }
-  };
-
-  const handleDelete = async (admin) => {
-    if (!confirm(`¿Eliminar a ${admin.name}?`)) return;
-    try {
-      await deleteAdmin(admin.id);
-      setAdmins(prev => prev.filter(a => a.id !== admin.id));
-    } catch {}
-  };
+const handleDelete = (admin) => {
+  if (!confirm(`¿Eliminar a ${admin.name}?`)) return;
+  setAdmins(prev => prev.filter(a => a.id !== admin.id));
+};
 
   return (
     <div>

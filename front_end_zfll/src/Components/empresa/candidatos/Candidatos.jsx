@@ -2,68 +2,224 @@ import React, { useEffect, useMemo, useState } from "react";
 import Modal from "../modal/Modal";
 import "./Candidatos.css";
 
-import {
-  getVacantes,
-  getPostulacionesEmpresa,
-  updatePostulacion,
-  getCvUrl
-} from "../../../Services/Empresa/candidatosService";
-
-export default function Candidatos() {
+/**
+ * ✅ Version MOCK (sin services)
+ * - Datos quemados
+ * - Stats calculadas
+ * - Modal perfil listo
+ * - Botón Buscar Egresados soporta prop opcional: onBuscarEgresados()
+ */
+export default function Candidatos({ onBuscarEgresados }) {
   const [vacantes, setVacantes] = useState([]);
-  const [candidatos, setCandidatos] = useState([]); // aquí guardamos "postulaciones" normalizadas para tu UI
+  const [candidatos, setCandidatos] = useState([]); // "postulaciones" normalizadas para UI
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [filterVacante, setFilterVacante] = useState("todas");
   const [search, setSearch] = useState("");
+
   const [showPerfil, setShowPerfil] = useState(false);
   const [selected, setSelected] = useState(null);
 
-
-  const getVacanteTitulo = (id) =>
-    vacantes.find((v) => String(v.id) === String(id))?.titulo ||
-    vacantes.find((v) => String(v.id) === String(id))?.title ||
-    "—";
-
-  const mapPostulacionToUI = (p) => {
-    return {
-      id: p?.id,
-      nombre: p?.aspirante_nombre || p?.usuario_email || "—",
-      institucion: "—",
-      cuando: p?.fecha_postulacion || "—",
-      vacanteId: p?.vacante || null,
-      match: 0,
-      estado: p?.estado_nombre || "NUEVO",
-      correo: p?.usuario_email || "—",
-      telefono: "—",
-      experiencia: "—",
-      postulacionTipo: "POSTULACIÓN",
-      skillsTecnicas: [],
-      skillsBlandas: [],
-      cvNombre: "CV.pdf",
-      cvUrl: null,
-    };
+  // ✅ Helpers
+  const badgeClass = (estado = "") => {
+    const e = String(estado || "").toLowerCase();
+    if (e.includes("entrevista")) return "badge entrevista";
+    if (e.includes("revisi")) return "badge revision";
+    if (e.includes("pend")) return "badge pendiente";
+    if (e.includes("nuevo")) return "badge nuevo";
+    return "badge nuevo";
   };
 
+  const getVacanteTitulo = (id) =>
+    vacantes.find((v) => String(v.id) === String(id))?.titulo || "—";
 
+  // ✅ Cargar MOCK al montar
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError("");
+    const loadMock = async () => {
       try {
-        const [vac, post] = await Promise.all([getVacantes(), getPostulacionesEmpresa()]);
-        setVacantes(vac || []);
-        setCandidatos((post || []).map(mapPostulacionToUI));
+        setLoading(true);
+        setError("");
+
+        // ====== VACANTES MOCK (como tus screenshots) ======
+        const mockVacantes = [
+          { id: 101, titulo: "Ingeniero de Software Senior" },
+          { id: 102, titulo: "Técnico en Electromecánica" },
+          { id: 103, titulo: "Analista de Datos Jr" },
+          { id: 104, titulo: "Pasantía en Logística" },
+        ];
+
+        // ====== POSTULACIONES MOCK ======
+        const mockPostulaciones = [
+          {
+            id: 1,
+            nombre: "Ana García",
+            institucion: "TEC",
+            cuando: "Hoy",
+            vacanteId: 101,
+            match: 95,
+            estado: "NUEVO",
+            correo: "ana.garcia@email.com",
+            telefono: "+506 8888-1111",
+            experiencia: "3 años en desarrollo fullstack",
+            postulacionTipo: "POSTULACIÓN DIRECTA",
+            skillsTecnicas: ["React", "TypeScript", "Node.js", "AWS"],
+            skillsBlandas: ["Pensamiento Crítico", "Liderazgo"],
+            cvNombre: "CV_Ana_Garcia.pdf",
+            cvUrl: null,
+          },
+          {
+            id: 2,
+            nombre: "Carlos Ruiz",
+            institucion: "INA",
+            cuando: "Hoy",
+            vacanteId: 102,
+            match: 82,
+            estado: "NUEVO",
+            correo: "carlos.ruiz@email.com",
+            telefono: "+506 8777-2211",
+            experiencia: "2 años en mantenimiento industrial",
+            postulacionTipo: "POSTULACIÓN",
+            skillsTecnicas: ["Electromecánica", "Mantenimiento", "Seguridad"],
+            skillsBlandas: ["Trabajo en equipo"],
+            cvNombre: "CV_Carlos_Ruiz.pdf",
+            cvUrl: null,
+          },
+          {
+            id: 3,
+            nombre: "Elena Solís",
+            institucion: "UCR",
+            cuando: "Ayer",
+            vacanteId: 103,
+            match: 88,
+            estado: "EN REVISIÓN",
+            correo: "elena.solis@email.com",
+            telefono: "+506 8999-0001",
+            experiencia: "1 año en BI / SQL",
+            postulacionTipo: "POSTULACIÓN",
+            skillsTecnicas: ["SQL", "Power BI", "Excel"],
+            skillsBlandas: ["Comunicación", "Responsabilidad"],
+            cvNombre: "CV_Elena_Solis.pdf",
+            cvUrl: null,
+          },
+          {
+            id: 4,
+            nombre: "Marco Vargas",
+            institucion: "TEC",
+            cuando: "Ayer",
+            vacanteId: 101,
+            match: 75,
+            estado: "NUEVO",
+            correo: "marco.vargas@email.com",
+            telefono: "+506 8444-1010",
+            experiencia: "2 años en frontend",
+            postulacionTipo: "POSTULACIÓN",
+            skillsTecnicas: ["React", "CSS", "APIs"],
+            skillsBlandas: ["Adaptabilidad"],
+            cvNombre: "CV_Marco_Vargas.pdf",
+            cvUrl: null,
+          },
+          {
+            id: 5,
+            nombre: "Lucía Rojas",
+            institucion: "ULACIT",
+            cuando: "Hace 2 días",
+            vacanteId: 104,
+            match: 91,
+            estado: "ENTREVISTA",
+            correo: "lucia.rojas@email.com",
+            telefono: "+506 8333-3434",
+            experiencia: "Práctica previa en operaciones",
+            postulacionTipo: "POSTULACIÓN",
+            skillsTecnicas: ["Logística", "Inventario", "Excel"],
+            skillsBlandas: ["Orden", "Comunicación"],
+            cvNombre: "CV_Lucia_Rojas.pdf",
+            cvUrl: null,
+          },
+          {
+            id: 6,
+            nombre: "Roberto Méndez",
+            institucion: "Independiente",
+            cuando: "Hoy",
+            vacanteId: 101,
+            match: 85,
+            estado: "NUEVO",
+            correo: "roberto.mendez@email.com",
+            telefono: "+506 8222-5656",
+            experiencia: "3 años en Node/React",
+            postulacionTipo: "POSTULACIÓN",
+            skillsTecnicas: ["Node.js", "React", "PostgreSQL"],
+            skillsBlandas: ["Proactividad"],
+            cvNombre: "CV_Roberto_Mendez.pdf",
+            cvUrl: null,
+          },
+        ];
+
+        setVacantes(mockVacantes);
+        setCandidatos(mockPostulaciones);
       } catch (e) {
-        setError("No se pudieron cargar los candidatos. Revisa el backend o tu token.");
+        setError("No se pudieron cargar los candidatos (mock).");
       } finally {
         setLoading(false);
       }
     };
 
-    load();
+    loadMock();
   }, []);
 
+  // ✅ Stats calculadas (para cards + panel derecho)
+  const stats = useMemo(() => {
+    const totalVacantes = vacantes.length;
+    const totalPostulantes = candidatos.length;
+
+    const enRevision = candidatos.filter((c) =>
+      String(c.estado || "").toLowerCase().includes("revisi")
+    ).length;
+
+    const entrevista = candidatos.filter((c) =>
+      String(c.estado || "").toLowerCase().includes("entrevista")
+    ).length;
+
+    const pendientes = candidatos.filter((c) => {
+      const e = String(c.estado || "").toLowerCase();
+      return e.includes("pend") || e.includes("nuevo");
+    }).length;
+
+    const avg =
+      totalPostulantes > 0
+        ? Math.round(
+            candidatos.reduce((acc, c) => acc + (Number(c.match) || 0), 0) /
+              totalPostulantes
+          )
+        : 0;
+
+    // Distribución por institución
+    const counts = candidatos.reduce((acc, c) => {
+      const key = c.institucion || "—";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const distArr = Object.entries(counts)
+      .map(([name, count]) => ({
+        name,
+        count,
+        pct: totalPostulantes ? Math.round((count / totalPostulantes) * 100) : 0,
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      totalVacantes,
+      totalPostulantes,
+      enRevision,
+      pendientes,
+      entrevista,
+      matchPromedio: avg,
+      distArr,
+    };
+  }, [vacantes, candidatos]);
+
+  // ✅ Filtros
   const filtered = useMemo(() => {
     const byVacante =
       filterVacante === "todas"
@@ -77,47 +233,32 @@ export default function Candidatos() {
     return bySearch;
   }, [candidatos, filterVacante, search]);
 
-  const marcarRevisado = async () => {
+  // ✅ Acciones MOCK
+  const marcarRevisado = () => {
     if (!selected?.id) return;
-    try {
-      // aquí deberías mandar estado_actual (ID de catálogo). Por ahora manda texto si tu backend lo permite.
-      const updated = await updatePostulacion(selected.id, { estado_actual: null });
 
-      setCandidatos((prev) =>
-        prev.map((c) => (c.id === selected.id ? { ...c, estado: updated?.estado_nombre || "EN REVISIÓN" } : c))
-      );
-      setSelected((prev) => ({ ...prev, estado: updated?.estado_nombre || "EN REVISIÓN" }));
-      setShowPerfil(false);
-    } catch {
-      Swal.fire({ icon: "error", title: "Error", text: "No se pudo actualizar el estado. Revisa PATCH /api/applications/<id>/." });
-    }
+    setCandidatos((prev) =>
+      prev.map((c) => (c.id === selected.id ? { ...c, estado: "EN REVISIÓN" } : c))
+    );
+    setSelected((prev) => ({ ...prev, estado: "EN REVISIÓN" }));
+    setShowPerfil(false);
   };
 
-  const invitarAEntrevista = async () => {
+  const invitarAEntrevista = () => {
     if (!selected?.id) return;
-    try {
-      await updatePostulacion(selected.id, { estado_actual: null });
-      Swal.fire({ icon: "success", title: "Listo", text: "Marcado como ENTREVISTA (ajusta estado_actual con ID real)." });
-      setShowPerfil(false);
-    } catch {
-      Swal.fire({ icon: "error", title: "Error", text: "No se pudo cambiar el estado a ENTREVISTA." });
-    }
+
+    setCandidatos((prev) =>
+      prev.map((c) => (c.id === selected.id ? { ...c, estado: "ENTREVISTA" } : c))
+    );
+    setSelected((prev) => ({ ...prev, estado: "ENTREVISTA" }));
+    setShowPerfil(false);
   };
 
-  const descargarCV = async () => {
-    if (!selected) return;
-
-    try {
-      const url = await getCvUrl(selected.id);
-      if (!url) {
-        Swal.fire({ icon: "info", title: "Sin CV", text: "No hay CV disponible para este candidato." });
-        return;
-      }
-      window.open(url, "_blank", "noopener,noreferrer");
-    } catch {
-      Swal.fire({ icon: "error", title: "Error", text: "No se pudo obtener el CV. Revisa GET /api/applications/<id>/cv/." });
-    }
+  const descargarCV = () => {
+    // mock: como no hay url real, solo mostramos info
+    alert("Mock: aquí abrirías el PDF del CV (cuando conectes backend).");
   };
+
   return (
     <div className="cand-wrap">
       <div className="cand-head">
@@ -127,8 +268,15 @@ export default function Candidatos() {
           {error ? <p style={{ marginTop: 8, color: "#c0392b" }}>{error}</p> : null}
         </div>
 
-
-        <button className="cand-btn-primary" type="button">
+        <button
+          className="cand-btn-primary"
+          type="button"
+          onClick={() => {
+            // ✅ si tu PrincipalEmpresa quiere cambiar vista:
+            // <Candidatos onBuscarEgresados={() => setActiveView("egresados")} />
+            if (typeof onBuscarEgresados === "function") onBuscarEgresados();
+          }}
+        >
           🎓 Buscar Egresados
         </button>
       </div>
@@ -182,7 +330,7 @@ export default function Candidatos() {
               <option value="todas">Todas las Vacantes</option>
               {vacantes.map((v) => (
                 <option key={v.id} value={v.id}>
-                  {v.titulo || v.title}
+                  {v.titulo}
                 </option>
               ))}
             </select>
@@ -300,6 +448,7 @@ export default function Candidatos() {
         </aside>
       </div>
 
+      {/* MODAL PERFIL */}
       <Modal
         isOpen={showPerfil}
         onClose={() => {
@@ -324,7 +473,9 @@ export default function Candidatos() {
 
                 <div className="perfil-badges">
                   <span className="perfil-pill green">MATCH {Number(selected.match) || 0}%</span>
-                  <span className="perfil-pill blue">{selected.postulacionTipo || "POSTULACIÓN DIRECTA"}</span>
+                  <span className="perfil-pill blue">
+                    {selected.postulacionTipo || "POSTULACIÓN DIRECTA"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -352,22 +503,30 @@ export default function Candidatos() {
 
                 <div className="perfil-skill-title">TÉCNICAS / BLANDAS</div>
                 <div className="perfil-skill-list">
-                  {(selected.skillsTecnicas || []).map((s) => (
-                    <span key={s} className="skill-chip">
-                      {s}
-                    </span>
-                  ))}
+                  {(selected.skillsTecnicas || []).length ? (
+                    selected.skillsTecnicas.map((s) => (
+                      <span key={s} className="skill-chip">
+                        {s}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="skill-chip soft">—</span>
+                  )}
                 </div>
 
                 <div className="perfil-skill-title" style={{ marginTop: 12 }}>
                   ⚡ POWER SKILLS
                 </div>
                 <div className="perfil-skill-list">
-                  {(selected.skillsBlandas || []).map((s) => (
-                    <span key={s} className="skill-chip soft">
-                      {s}
-                    </span>
-                  ))}
+                  {(selected.skillsBlandas || []).length ? (
+                    selected.skillsBlandas.map((s) => (
+                      <span key={s} className="skill-chip soft">
+                        {s}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="skill-chip soft">—</span>
+                  )}
                 </div>
               </div>
             </div>

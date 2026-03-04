@@ -5,6 +5,8 @@ import styles from './Dashboard.module.css';
 import { getDashboardStats, getPendingRegistrations, getAuditLogs } from '../../../Services/Admin/auditService.js';
 import { MOCK_COMPANIES, MOCK_INSTITUTIONS, MOCK_ASPIRANTS, MOCK_VACANCIES, MOCK_AUDIT } from './constants';
 
+ 
+
 const STATS_CONFIG = [
   { key: 'companies',    label: 'Empresas',         icon: Building2,    cls: styles.blue   },
   { key: 'institutions', label: 'Instituciones',     icon: GraduationCap, cls: styles.indigo },
@@ -24,7 +26,7 @@ const Dashboard = () => {
   );
   const [auditLogs, setAuditLogs] = useState(MOCK_AUDIT);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     getDashboardStats()
       .then(setStats)
       .catch(() => {}); // usa fallback mock
@@ -36,7 +38,7 @@ const Dashboard = () => {
     getAuditLogs({ limit: 4 })
       .then(data => setAuditLogs(data.items || data))
       .catch(() => {});
-  }, []);
+  }, []); */
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

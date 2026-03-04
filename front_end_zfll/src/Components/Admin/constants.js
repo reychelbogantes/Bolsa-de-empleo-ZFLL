@@ -371,6 +371,37 @@ export const MOCK_VACANCIES = [
   },
 ];
 
+export const MOCK_ADMINS = [
+  {
+    id: 1,
+    name: 'Carlos Ramírez Solano',
+    email: 'carlos.ramirez@admin.cr',
+    role: 'superadmin',
+    lastLogin: '2025-03-04 10:12',
+  },
+  {
+    id: 2,
+    name: 'Andrea Mora Jiménez',
+    email: 'andrea.mora@admin.cr',
+    role: 'admin',
+    lastLogin: '2025-03-04 09:45',
+  },
+  {
+    id: 3,
+    name: 'Luis Arias Vega',
+    email: 'luis.arias@admin.cr',
+    role: 'admin',
+    lastLogin: '2025-03-03 17:30',
+  },
+  {
+    id: 4,
+    name: 'Patricia Ugalde Campos',
+    email: 'patricia.ugalde@admin.cr',
+    role: 'admin',
+    lastLogin: '2025-03-02 14:20',
+  },
+];
+
 export const MOCK_AUDIT = [
   {
     id: 1,

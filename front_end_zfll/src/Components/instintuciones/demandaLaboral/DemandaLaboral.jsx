@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DemandaLaboral.css";
+
 import { getDemandaLaboral } from "../../../Services/instintuciones/demandaLaboralServices"; 
 // ^ ajusta el ../../../ según tu estructura
 

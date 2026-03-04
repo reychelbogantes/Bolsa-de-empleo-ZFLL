@@ -13,8 +13,8 @@ import { X, FileText, CheckCircle, Send, MapPin, Briefcase, Upload, Plus } from 
 import './ApplyModal.css';
 
 const SAMPLE_CVS = [
-  { id: 1, nombre_etiqueta: 'CV_Principal.pdf',   es_predeterminado: true  },
-  { id: 2, nombre_etiqueta: 'CV_Ingles_2024.pdf', es_predeterminado: false },
+  { id: 1, nombre_etiqueta: 'CV_Principal.pdf',   es_predeterminado: true  }
+  
 ];
 
 const MAX_DESC = 500;

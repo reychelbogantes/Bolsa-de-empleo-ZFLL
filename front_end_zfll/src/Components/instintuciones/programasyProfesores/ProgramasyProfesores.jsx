@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Modal from "../modal/Modal";
 import "./ProgramasyProfesores.css";
-
 import Swal from "sweetalert2";
 
+// ✅ SERVICES (los dejamos importados pero NO obligatorios)
+// Si quieres después conectarlo, solo cambias USE_MOCK a false
 import {
   getProgramas,
   createPrograma,
@@ -11,8 +12,72 @@ import {
   deletePrograma,
 } from "../../../Services/instintuciones/programasService";
 
+// ✅ SWITCH
+const USE_MOCK = true;
+
+// 🔥 DATOS QUEMADOS
+const MOCK_PROGRAMAS = [
+  {
+    id: 1,
+    nombre: "Ingeniería en Computación",
+    descripcion:
+      "Programa enfocado en desarrollo de software, bases de datos y arquitectura de sistemas.",
+    profesor: "Ing. Luis Diego Castro",
+    egresados: 42,
+    modalidad: "Presencial",
+    duracion: "4 años",
+    requisitos: "Bachillerato, prueba de admisión, entrevista.",
+  },
+  {
+    id: 2,
+    nombre: "Administración de Empresas",
+    descripcion:
+      "Formación integral en finanzas, contabilidad, mercadeo y gestión de proyectos.",
+    profesor: "MSc. Andrea Salazar",
+    egresados: 58,
+    modalidad: "Híbrido",
+    duracion: "4 años",
+    requisitos: "Bachillerato, prueba de aptitud, documentación.",
+  },
+  {
+    id: 3,
+    nombre: "Electromecánica",
+    descripcion:
+      "Enfoque técnico en mantenimiento industrial, automatización y control eléctrico.",
+    profesor: "Ing. Carlos Rojas",
+    egresados: 31,
+    modalidad: "Presencial",
+    duracion: "3 años",
+    requisitos: "Bachillerato, examen técnico básico.",
+  },
+  {
+    id: 4,
+    nombre: "Ciberseguridad",
+    descripcion:
+      "Redes, seguridad ofensiva/defensiva, gestión de riesgos y auditoría de sistemas.",
+    profesor: "Dra. Elena Rodríguez",
+    egresados: 19,
+    modalidad: "Remoto",
+    duracion: "2 años",
+    requisitos: "Conocimientos básicos de redes, entrevista.",
+  },
+];
+
+// ✅ mapper tolerante por si backend usa nombres distintos
+const mapPrograma = (p) => ({
+  id: p.id,
+  nombre: p.nombre ?? p.name ?? "",
+  descripcion: p.descripcion ?? p.description ?? "",
+  profesor: p.profesor ?? p.teacher ?? "—",
+  egresados: Number(p.egresados ?? p.egresados_registrados ?? 0),
+  modalidad: p.modalidad ?? p.modality ?? "Presencial",
+  duracion: p.duracion ?? p.duration ?? "",
+  requisitos: p.requisitos ?? p.requirements ?? "",
+  _raw: p,
+});
+
 export default function ProgramasyProfesores() {
-  const [programas, setProgramas] = useState([]); // ✅ sin mock
+  const [programas, setProgramas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modales
@@ -45,25 +110,18 @@ export default function ProgramasyProfesores() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  // ✅ mapper tolerante por si backend usa nombres distintos
-  const mapPrograma = (p) => ({
-    id: p.id,
-    nombre: p.nombre ?? p.name ?? "",
-    descripcion: p.descripcion ?? p.description ?? "",
-    profesor: p.profesor ?? p.teacher ?? "—",
-    egresados: Number(p.egresados ?? p.egresados_registrados ?? 0),
-    modalidad: p.modalidad ?? p.modality ?? "Presencial",
-    duracion: p.duracion ?? p.duration ?? "",
-    requisitos: p.requisitos ?? p.requirements ?? "",
-    _raw: p,
-  });
-
+  // ====== LOAD ======
   const reloadProgramas = async () => {
+    if (USE_MOCK) {
+      // 🔥 load mock
+      setProgramas(MOCK_PROGRAMAS.map(mapPrograma));
+      return;
+    }
+
     const data = await getProgramas();
     setProgramas((Array.isArray(data) ? data : []).map(mapPrograma));
   };
 
-  // ✅ Cargar inicial (GET)
   useEffect(() => {
     (async () => {
       try {
@@ -71,11 +129,14 @@ export default function ProgramasyProfesores() {
         await reloadProgramas();
       } catch (err) {
         console.error(err);
-        setProgramas([]);
+
+        // ✅ fallback a mock si backend falla
+        setProgramas(MOCK_PROGRAMAS.map(mapPrograma));
+
         Swal.fire({
-          icon: "error",
-          title: "No se pudieron cargar programas",
-          text: err?.response?.data?.detail || "Revisa backend / token.",
+          icon: "warning",
+          title: "Backend no disponible",
+          text: "Se cargaron datos quemados (mock) para que puedas seguir.",
           confirmButtonColor: "#2563eb",
         });
       } finally {
@@ -84,7 +145,7 @@ export default function ProgramasyProfesores() {
     })();
   }, []);
 
-  // ✅ CREATE (POST)
+  // ====== CREATE ======
   const crearPrograma = async (e) => {
     e.preventDefault();
 
@@ -93,6 +154,9 @@ export default function ProgramasyProfesores() {
       descripcion: form.descripcion.trim(),
       profesor: form.profesor.trim() || "—",
       egresados: Number(form.egresados || 0),
+      modalidad: "Presencial",
+      duracion: "",
+      requisitos: "",
     };
 
     if (!payload.nombre) {
@@ -106,8 +170,17 @@ export default function ProgramasyProfesores() {
     }
 
     try {
-      await createPrograma(payload);
-      await reloadProgramas();
+      if (USE_MOCK) {
+        // ✅ CREATE EN MEMORIA
+        setProgramas((prev) => {
+          const nextId = prev.length ? Math.max(...prev.map((x) => x.id)) + 1 : 1;
+          return [{ ...payload, id: nextId }, ...prev];
+        });
+      } else {
+        await createPrograma(payload);
+        await reloadProgramas();
+      }
+
       setShowNuevo(false);
       resetForm();
 
@@ -162,7 +235,7 @@ export default function ProgramasyProfesores() {
     setEditForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // ✅ UPDATE (PATCH)
+  // ====== UPDATE ======
   const saveEditar = async (e) => {
     e.preventDefault();
     if (!selected?.id) return;
@@ -177,9 +250,17 @@ export default function ProgramasyProfesores() {
     };
 
     try {
-      await updatePrograma(selected.id, payload);
-      await reloadProgramas();
-      closeEditar();
+      if (USE_MOCK) {
+        // ✅ UPDATE EN MEMORIA
+        setProgramas((prev) =>
+          prev.map((p) => (p.id === selected.id ? { ...p, ...payload } : p))
+        );
+        closeEditar();
+      } else {
+        await updatePrograma(selected.id, payload);
+        await reloadProgramas();
+        closeEditar();
+      }
 
       Swal.fire({
         toast: true,
@@ -200,7 +281,7 @@ export default function ProgramasyProfesores() {
     }
   };
 
-  // ✅ DELETE (DELETE)
+  // ====== DELETE ======
   const eliminarPrograma = (p) => {
     Swal.fire({
       title: "¿Eliminar programa?",
@@ -215,8 +296,13 @@ export default function ProgramasyProfesores() {
       if (!res.isConfirmed) return;
 
       try {
-        await deletePrograma(p.id);
-        await reloadProgramas();
+        if (USE_MOCK) {
+          // ✅ DELETE EN MEMORIA
+          setProgramas((prev) => prev.filter((x) => x.id !== p.id));
+        } else {
+          await deletePrograma(p.id);
+          await reloadProgramas();
+        }
 
         Swal.fire({
           toast: true,

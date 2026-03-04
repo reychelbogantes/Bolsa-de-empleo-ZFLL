@@ -2,37 +2,29 @@ import { useState, useEffect } from 'react';
 import { GraduationCap, Briefcase, Building2 } from 'lucide-react';
 import Card from '../Card/Card';
 import styles from './Vacancies.module.css';
-import { getPendingVacancies, approveVacancy, rejectVacancy } from '../../../Services/Admin/vacancyService';
-import { MOCK_VACANCIES } from '../../../constants';// Reemplazar con datos reales al integrar API
+/* import { getPendingVacancies, approveVacancy, rejectVacancy } from '../../../Services/Admin/vacancyService';
+ */import { MOCK_VACANCIES } from './constants';// Reemplazar con datos reales al integrar API
 
 const Vacancies = () => {
   const [vacancies, setVacancies] = useState(MOCK_VACANCIES.filter(v => v.status === 'pendiente'));
   const [selected, setSelected]   = useState(null);
   const [loading, setLoading]     = useState(false);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     getPendingVacancies()
       .then(data => setVacancies(data.items || data))
       .catch(() => {});
   }, []);
+ */
+const handleApprove = () => {
+  setVacancies(prev => prev.filter(v => v.id !== selected.id));
+  setSelected(null);
+};
 
-  const handleApprove = async () => {
-    setLoading(true);
-    try {
-      await approveVacancy(selected.id);
-      setVacancies(prev => prev.filter(v => v.id !== selected.id));
-      setSelected(null);
-    } catch {} finally { setLoading(false); }
-  };
-
-  const handleReject = async () => {
-    setLoading(true);
-    try {
-      await rejectVacancy(selected.id);
-      setVacancies(prev => prev.filter(v => v.id !== selected.id));
-      setSelected(null);
-    } catch {} finally { setLoading(false); }
-  };
+const handleReject = () => {
+  setVacancies(prev => prev.filter(v => v.id !== selected.id));
+  setSelected(null);
+};
 
   return (
     <div className={styles.grid}>

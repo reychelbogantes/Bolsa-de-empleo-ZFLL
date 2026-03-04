@@ -1,166 +1,88 @@
-import React, { useEffect, useMemo, useState } from "react";
-/* import "./VacantesDisponibles.css"; */
-import Modal from "../modal/Modal";
+// UsuariosInsti.jsx
+import React, { useMemo, useState } from "react";
+import "./UsuariosInsti.css";
+import Modal from "../modal/Modal"; // ajusta la ruta si tu Modal está en otro lado
 
-import { listVacantes } from "../../../Services/instintuciones/vacantesDisponiblesService";
-
-export default function VacantesDisponibles() {
+export default function UsuariosInsti() {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [vacantes, setVacantes] = useState([]);
   const [selected, setSelected] = useState(null);
   const [showDetalle, setShowDetalle] = useState(false);
 
-  // ===== MODAL RECOMENDAR =====
-  const [showRecomendar, setShowRecomendar] = useState(false);
-  const [recomText, setRecomText] = useState("");
-  const [searchStd, setSearchStd] = useState("");
-  const [selectedStdIds, setSelectedStdIds] = useState([]);
-
-  // ✅ MOCK estudiantes (como antes)
-  const estudiantes = [
-    { id: 1, nombre: "Jimena Alfaro", carrera: "ING. ELECTRÓNICA" },
-    { id: 2, nombre: "Daniel Brenes", carrera: "ING. PRODUCCIÓN" },
-    { id: 3, nombre: "Sofía Méndez", carrera: "ING. COMPUTACIÓN" },
-    { id: 4, nombre: "Ricardo Mora", carrera: "ING. MECATRÓNICA" },
-    { id: 5, nombre: "Elena Rojas", carrera: "ING. COMPUTACIÓN", badge: "Ver Perfil" },
-    { id: 6, nombre: "Marco Vargas", carrera: "ING. ELECTRÓNICA" },
-  ];
-
-  // ✅ MOCK vacantes (como antes)
-  const MOCK_VACANTES = [
+  // 🔥 DATOS QUEMADOS (MOCK)
+  const usuarios = [
     {
       id: 1,
-      puesto: "Ingeniero de Software Senior",
-      empresa: "INTEL",
-      area: "TI",
-      correo: "jobs@intel.com",
-      tipo: "Tiempo Completo",
-      modalidad: "Híbrido",
-      ubicacion: "Heredia, Costa Rica",
-      descripcion:
-        "Buscamos un Ingeniero de Software Senior con experiencia en React y Node.js para liderar proyectos críticos.",
-      requisitos: ["5+ años de experiencia", "React/Next.js", "Node.js/Express", "Inglés B2+"],
+      nombre: "María",
+      apellido: "González",
+      username: "maria.gonzalez",
+      email: "maria.gonzalez@tec.ac.cr",
+      telefono: "+506 8888 1001",
+      rol: "ADMIN_INSTITUCION",
+      institucion: { id: 1, nombre: "TEC" },
+      estado: "ACTIVO",
+      creado_en: "2025-10-12",
+      ultimo_acceso: "2026-03-02 08:21",
     },
     {
       id: 2,
-      puesto: "Técnico en Electromecánica",
-      empresa: "BOSTON SCIENTIFIC",
-      area: "Mantenimiento",
-      correo: "talento@bostonscientific.com",
-      tipo: "Tiempo Completo",
-      modalidad: "Presencial",
-      ubicacion: "Cartago, Costa Rica",
-      descripcion:
-        "Responsable de mantenimiento preventivo y correctivo en equipos industriales, siguiendo procedimientos y reportes.",
-      requisitos: ["Electromecánica", "PLC básico", "Turnos", "Trabajo bajo presión"],
+      nombre: "Juan",
+      apellido: "Pérez",
+      username: "juan.perez",
+      email: "juan.perez@tec.ac.cr",
+      telefono: "+506 8888 1002",
+      rol: "GESTOR_CARRERAS",
+      institucion: { id: 1, nombre: "TEC" },
+      estado: "ACTIVO",
+      creado_en: "2025-11-05",
+      ultimo_acceso: "2026-03-01 19:10",
     },
     {
       id: 3,
-      puesto: "Analista de Datos Jr",
-      empresa: "MICROSOFT",
-      area: "BI",
-      correo: "jobs@microsoft.com",
-      tipo: "Medio Tiempo",
-      modalidad: "Remoto",
-      ubicacion: "Remoto",
-      descripcion:
-        "Apoyo en reportes, dashboards y análisis de datos. Limpieza y generación de insights para negocio.",
-      requisitos: ["SQL básico", "Excel", "Power BI/Tableau", "Comunicación"],
+      nombre: "Karla",
+      apellido: "Rojas",
+      username: "karla.rojas",
+      email: "karla.rojas@uam.ac.cr",
+      telefono: "+506 8888 2003",
+      rol: "COORDINADOR_PRACTICA",
+      institucion: { id: 2, nombre: "UAM" },
+      estado: "SUSPENDIDO",
+      creado_en: "2025-09-22",
+      ultimo_acceso: "2026-02-20 14:02",
+    },
+    {
+      id: 4,
+      nombre: "Esteban",
+      apellido: "Araya",
+      username: "esteban.araya",
+      email: "esteban.araya@ina.ac.cr",
+      telefono: "+506 8888 3004",
+      rol: "LECTOR",
+      institucion: { id: 3, nombre: "INA" },
+      estado: "ACTIVO",
+      creado_en: "2026-01-10",
+      ultimo_acceso: "2026-03-03 09:45",
     },
   ];
 
-  const norm = (s = "") =>
-    s
-      .toString()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-
-  // ✅ mapper tolerante por si backend usa otros nombres
-  const mapVacante = (v) => {
-    const puesto = v.puesto ?? v.title ?? v.titulo ?? v.position ?? "Vacante";
-    const empresa =
-      v.empresa ??
-      v.company ??
-      v.company_name ??
-      v.empresa_nombre ??
-      "Empresa";
-    const area = v.area ?? v.category ?? v.departamento ?? "—";
-    const correo = v.correo ?? v.email ?? v.contact_email ?? "";
-    const tipo = v.tipo ?? v.contract_type ?? v.type ?? "—";
-    const modalidad = v.modalidad ?? v.work_mode ?? v.modality ?? "—";
-    const ubicacion = v.ubicacion ?? v.location ?? "—";
-    const descripcion = v.descripcion ?? v.description ?? "Sin descripción disponible.";
-
-    const reqRaw = v.requisitos ?? v.requirements ?? v.skills ?? [];
-    const requisitos = Array.isArray(reqRaw)
-      ? reqRaw
-      : typeof reqRaw === "string"
-        ? reqRaw.split(",").map((x) => x.trim()).filter(Boolean)
-        : [];
-
-    return {
-      id: v.id ?? Math.random(),
-      puesto,
-      empresa,
-      area,
-      correo,
-      tipo,
-      modalidad,
-      ubicacion,
-      descripcion,
-      requisitos,
-      _raw: v,
-    };
-  };
-
-  // ✅ FETCH real + fallback a mock (como antes)
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-
-        const data = await listVacantes();
-        const list = Array.isArray(data) ? data : [];
-
-        if (list.length) {
-          setVacantes(list.map(mapVacante));
-        } else {
-          setVacantes(MOCK_VACANTES);
-        }
-      } catch (err) {
-        console.error("Error cargando vacantes (fallback mock):", err);
-        setVacantes(MOCK_VACANTES);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
   const filtered = useMemo(() => {
-    if (!search) return vacantes;
-    const q = norm(search);
+    const q = search.trim().toLowerCase();
+    if (!q) return usuarios;
 
-    return vacantes.filter((v) =>
-      [v.puesto, v.empresa, v.area, v.tipo, v.modalidad, v.ubicacion]
-        .map(norm)
-        .join(" ")
-        .includes(q)
-    );
-  }, [search, vacantes]);
+    return usuarios.filter((u) => {
+      const full = `${u.nombre} ${u.apellido}`.toLowerCase();
+      return (
+        full.includes(q) ||
+        (u.username || "").toLowerCase().includes(q) ||
+        (u.email || "").toLowerCase().includes(q) ||
+        (u.rol || "").toLowerCase().includes(q) ||
+        (u.institucion?.nombre || "").toLowerCase().includes(q) ||
+        (u.estado || "").toLowerCase().includes(q)
+      );
+    });
+  }, [search]);
 
-  const filteredEstudiantes = useMemo(() => {
-    const q = norm(searchStd);
-    if (!q) return estudiantes;
-    return estudiantes.filter((s) =>
-      [s.nombre, s.carrera].map(norm).join(" ").includes(q)
-    );
-  }, [searchStd]);
-
-  const openDetalle = (v) => {
-    setSelected(v);
+  const openDetalle = (u) => {
+    setSelected(u);
     setShowDetalle(true);
   };
 
@@ -169,214 +91,162 @@ export default function VacantesDisponibles() {
     setSelected(null);
   };
 
-  const openRecomendar = () => setShowRecomendar(true);
-
-  const closeRecomendar = () => {
-    setShowRecomendar(false);
-    setRecomText("");
-    setSearchStd("");
-    setSelectedStdIds([]);
-  };
-
-  const toggleStd = (id) => {
-    setSelectedStdIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  };
-
-  const enviarRecomendacion = () => {
-    console.log("Vacante:", selected?._raw || selected);
-    console.log("Recomendación:", recomText);
-    console.log("Estudiantes:", selectedStdIds);
-
-    closeRecomendar();
-    setShowDetalle(false);
-    setSelected(null);
-  };
-
   return (
-    <div className="vd-wrap">
-      <div className="vd-head">
-        <h2>Vacantes Disponibles</h2>
-        <p>Explora las oportunidades laborales publicadas por las empresas para tus estudiantes.</p>
-      </div>
-
-      <div className="vd-card">
-        <div className="vd-search">
-          <span className="vd-ico">🔎</span>
-          <input
-            placeholder="Buscar por puesto o empresa..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    <div className="ui-container">
+      <div className="ui-header">
+        <div>
+          <h2 className="ui-title">Usuarios de Institución</h2>
+          <p className="ui-subtitle">
+            Lista de usuarios vinculados a instituciones (datos quemados).
+          </p>
         </div>
 
-        {loading ? (
-          <div className="vd-loading">Cargando vacantes...</div>
-        ) : (
-          <div className="vd-grid">
-            {filtered.map((v) => (
-              <div key={v.id} className="vd-job">
-                <div className="vd-top">
-                  <div className="vd-avatar">{(v.empresa || "E").slice(0, 1)}</div>
-
-                  <div className="vd-main">
-                    <div className="vd-title">{v.puesto}</div>
-                    <div className="vd-company">{v.empresa}</div>
-                  </div>
-                </div>
-
-                <div className="vd-meta">
-                  <div className="vd-row">🧾 {v.area} • {v.tipo}</div>
-                  <div className="vd-row">📍 {v.modalidad}</div>
-                </div>
-
-                <button className="vd-btn" type="button" onClick={() => openDetalle(v)}>
-                  Ver Detalles
-                </button>
-              </div>
-            ))}
-
-            {!filtered.length ? (
-              <div style={{ padding: 12 }}>No hay vacantes que coincidan con tu búsqueda.</div>
-            ) : null}
-          </div>
-        )}
+        <div className="ui-actions">
+          <input
+            className="ui-search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nombre, email, rol, institución..."
+          />
+        </div>
       </div>
 
-      {/* MODAL DETALLES */}
-      <Modal isOpen={showDetalle} onClose={closeDetalle} title="Detalles de la Vacante">
-        {!selected ? null : (
-          <div className="vdd-wrap">
-            <div className="vdd-top">
-              <div className="vdd-avatar">{selected.empresa?.slice(0, 1) || "V"}</div>
+      <div className="ui-card">
+        <div className="ui-tableWrap">
+          <table className="ui-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Institución</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Último acceso</th>
+                <th className="ui-thActions">Acciones</th>
+              </tr>
+            </thead>
 
-              <div className="vdd-main">
-                <div className="vdd-title">{selected.puesto}</div>
-                <div className="vdd-sub">
-                  {selected.empresa} • <span className="vdd-dot">{selected.area || "—"}</span>
-                </div>
-
-                <a className="vdd-link" href={`mailto:${selected.correo || "rrhh@empresa.com"}`}>
-                  {selected.correo || "rrhh@empresa.com"}
-                </a>
-              </div>
-            </div>
-
-            <div className="vdd-meta">
-              <div className="vdd-metaItem">
-                <div className="vdd-metaLbl">CONTRATO</div>
-                <div className="vdd-metaVal">{selected.tipo || "—"}</div>
-              </div>
-
-              <div className="vdd-metaItem">
-                <div className="vdd-metaLbl">MODALIDAD</div>
-                <div className="vdd-metaVal">{selected.modalidad || "—"}</div>
-              </div>
-            </div>
-
-            <div className="vdd-sec">
-              <div className="vdd-secLbl">DESCRIPCIÓN</div>
-              <div className="vdd-descBox">{selected.descripcion || "Sin descripción disponible."}</div>
-            </div>
-
-            <div className="vdd-sec">
-              <div className="vdd-secLbl">REQUISITOS</div>
-              <div className="vdd-chips">
-                {(selected.requisitos || []).length ? (
-                  (selected.requisitos || []).map((r) => (
-                    <span key={r} className="vdd-chip">{r}</span>
-                  ))
-                ) : (
-                  <span className="vdd-chip">No especificados</span>
-                )}
-              </div>
-            </div>
-
-            <button className="vdd-cta" type="button" onClick={openRecomendar}>
-              Recomendar Estudiantes para esta Vacante
-            </button>
-          </div>
-        )}
-      </Modal>
-
-      {/* MODAL RECOMENDAR */}
-      <Modal isOpen={showRecomendar} onClose={closeRecomendar} title="Recomendar Estudiantes">
-        {!selected ? null : (
-          <div className="rec-wrap">
-            <div className="rec-subtitle">
-              Para la vacante: <strong>{selected.puesto}</strong> en{" "}
-              <strong>{selected.empresa}</strong>
-            </div>
-
-            <p className="rec-help">
-              Selecciona los perfiles de los estudiantes que deseas recomendar y escribe una breve recomendación.
-              Se enviará su información de perfil y CV a la empresa.
-            </p>
-
-            <div className="rec-label">RECOMENDACIÓN INSTITUCIONAL</div>
-            <textarea
-              className="rec-textarea"
-              value={recomText}
-              onChange={(e) => setRecomText(e.target.value)}
-              placeholder="Escribe aquí por qué recomiendas a estos estudiantes para esta vacante..."
-              rows={4}
-            />
-
-            <div className="rec-rowHead">
-              <div className="rec-label">SELECCIONAR ESTUDIANTES</div>
-
-              <div className="rec-search">
-                <span className="rec-searchIco">🔎</span>
-                <input
-                  value={searchStd}
-                  onChange={(e) => setSearchStd(e.target.value)}
-                  placeholder="Buscar por nombre o carrera..."
-                />
-              </div>
-            </div>
-
-            <div className="rec-list">
-              {filteredEstudiantes.map((s) => {
-                const checked = selectedStdIds.includes(s.id);
-
-                return (
-                  <div key={s.id} className="rec-item">
-                    <label className="rec-left">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleStd(s.id)}
-                      />
-                      <div className="rec-info">
-                        <div className="rec-name">{s.nombre}</div>
-                        <div className="rec-career">{s.carrera}</div>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="ui-empty">
+                    No hay resultados con ese filtro.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.id}</td>
+                    <td>
+                      <div className="ui-userCell">
+                        <div className="ui-userName">
+                          {u.nombre} {u.apellido}
+                        </div>
+                        <div className="ui-userMeta">@{u.username}</div>
                       </div>
-                    </label>
+                    </td>
+                    <td>{u.email}</td>
+                    <td>
+                      {u.institucion?.nombre}{" "}
+                      <span className="ui-muted">#{u.institucion?.id}</span>
+                    </td>
+                    <td>
+                      <span className="ui-badge">{u.rol}</span>
+                    </td>
+                    <td>
+                      <span
+                        className={
+                          "ui-pill " +
+                          (u.estado === "ACTIVO" ? "ui-pillOk" : "ui-pillWarn")
+                        }
+                      >
+                        {u.estado}
+                      </span>
+                    </td>
+                    <td>{u.ultimo_acceso || "-"}</td>
+                    <td className="ui-tdActions">
+                      <button
+                        className="ui-btn ui-btnGhost"
+                        onClick={() => openDetalle(u)}
+                      >
+                        Ver
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
-                    <div className="rec-actions">
-                      <button type="button" className="rec-eye" title="Ver">👁️</button>
-                      {s.badge ? (
-                        <button type="button" className="rec-pill">{s.badge}</button>
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              })}
+        <div className="ui-footer">
+          <span className="ui-muted">
+            Mostrando <b>{filtered.length}</b> de <b>{usuarios.length}</b>
+          </span>
+        </div>
+      </div>
+
+      {/* ===== MODAL DETALLE ===== */}
+      <Modal
+        isOpen={showDetalle}
+        onClose={closeDetalle}
+        title="Detalle del usuario"
+      >
+        {!selected ? null : (
+          <div className="ui-modalGrid">
+            <div className="ui-field">
+              <div className="ui-label">Nombre completo</div>
+              <div className="ui-value">
+                {selected.nombre} {selected.apellido}
+              </div>
             </div>
 
-            <div className="rec-footer">
-              <button type="button" className="rec-cancel" onClick={closeRecomendar}>
-                Cancelar
-              </button>
+            <div className="ui-field">
+              <div className="ui-label">Username</div>
+              <div className="ui-value">@{selected.username}</div>
+            </div>
 
-              <button
-                type="button"
-                className={`rec-send ${selectedStdIds.length ? "on" : ""}`}
-                disabled={!selectedStdIds.length}
-                onClick={enviarRecomendacion}
-              >
-                Enviar Recomendación
+            <div className="ui-field">
+              <div className="ui-label">Email</div>
+              <div className="ui-value">{selected.email}</div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Teléfono</div>
+              <div className="ui-value">{selected.telefono}</div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Institución</div>
+              <div className="ui-value">
+                {selected.institucion?.nombre} (ID: {selected.institucion?.id})
+              </div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Rol</div>
+              <div className="ui-value">{selected.rol}</div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Estado</div>
+              <div className="ui-value">{selected.estado}</div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Creado en</div>
+              <div className="ui-value">{selected.creado_en}</div>
+            </div>
+
+            <div className="ui-field">
+              <div className="ui-label">Último acceso</div>
+              <div className="ui-value">{selected.ultimo_acceso || "-"}</div>
+            </div>
+
+            <div className="ui-modalActions">
+              <button className="ui-btn" onClick={closeDetalle}>
+                Cerrar
               </button>
             </div>
           </div>
