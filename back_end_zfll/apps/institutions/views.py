@@ -12,7 +12,6 @@ from apps.pasantias.models import SolicitudPasantia
 
 from .models import Institucion, ProgramaFormacion
 from .serializers import (
-    UsuarioInstitucionalSerializer,
     UsuarioInstitucionalCreateSerializer,
     ProgramaFormacionCRUDSerializer,
 )
@@ -43,7 +42,7 @@ class InstitucionListView(generics.ListAPIView):
     - Otros: solo activas
     Filtro opcional: ?activa=false para pendientes
     """
-    serializer_class = InstitucionSerializer
+    # serializer_class = InstitucionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -63,7 +62,7 @@ class InstitucionListView(generics.ListAPIView):
 class InstitucionDetailView(generics.RetrieveUpdateAPIView):
     """GET/PATCH /api/institutions/{id}/"""
     queryset = Institucion.objects.select_related("usuario", "tipo_institucion").all()
-    serializer_class = InstitucionSerializer
+    # serializer_class = InstitucionSerializer
     permission_classes = [IsAuthenticated]
 
 
@@ -85,24 +84,24 @@ class InstitucionUsersListCreateView(generics.ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.method == "POST":
             return UsuarioInstitucionalCreateSerializer
-        return UsuarioInstitucionalSerializer
+        # return UsuarioInstitucionalSerializer
 
     def get_serializer_context(self):
         ctx = super().get_serializer_context()
         ctx["institucion"] = _get_my_institucion(self.request)
         return ctx
 
-    def create(self, request, *args, **kwargs):
-        ser = self.get_serializer(data=request.data)
-        ser.is_valid(raise_exception=True)
-        perfil = ser.save()
-        out = UsuarioInstitucionalSerializer(perfil, context=self.get_serializer_context()).data
-        return Response(out, status=201)
+    # def create(self, request, *args, **kwargs):
+    #     ser = self.get_serializer(data=request.data)
+    #     ser.is_valid(raise_exception=True)
+    #     perfil = ser.save()
+    #     out = UsuarioInstitucionalSerializer(perfil, context=self.get_serializer_context()).data
+    #     return Response(out, status=201)
 
 
 class InstitucionUsersDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsInstitucion]
-    serializer_class = UsuarioInstitucionalSerializer
+    # serializer_class = UsuarioInstitucionalSerializer
 
     def get_queryset(self):
         inst = _get_my_institucion(self.request)

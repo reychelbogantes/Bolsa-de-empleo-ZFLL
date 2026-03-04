@@ -10,4 +10,4 @@ function EmpresaPage() {
   )
 }
 
-export default EmpresaPage
+export default EmpresaPage  

@@ -42,13 +42,13 @@ def _make_username_from_email(email: str) -> str:
     return f"{username}_{i}"
 
 
-class UsuarioInstitucionalSerializer(serializers.ModelSerializer):
-    correo = serializers.EmailField(source="usuario.email", read_only=True)
+# class UsuarioInstitucionalSerializer(serializers.ModelSerializer):
+#     correo = serializers.EmailField(source="usuario.email", read_only=True)
 
-    class Meta:
-        model = UsuarioInstitucional
-        fields = ["id", "nombre_completo", "correo", "rol", "activo", "fecha_creacion"]
-        read_only_fields = ["id", "correo", "fecha_creacion"]
+#     class Meta:
+#         model = UsuarioInstitucional
+#         fields = ["id", "nombre_completo", "correo", "rol", "activo", "fecha_creacion"]
+#         read_only_fields = ["id", "correo", "fecha_creacion"]
 
 
 class UsuarioInstitucionalCreateSerializer(serializers.Serializer):
@@ -80,14 +80,14 @@ class UsuarioInstitucionalCreateSerializer(serializers.Serializer):
             user.add_role("institucion")
 
         # crear perfil institucional
-        perfil = UsuarioInstitucional.objects.create(
-            institucion=institucion,
-            usuario=user,
-            nombre_completo=nombre,
-            rol=rol,
-            activo=True,
-        )
-        return perfil
+        # perfil = UsuarioInstitucional.objects.create(
+        #     institucion=institucion,
+        #     usuario=user,
+        #     nombre_completo=nombre,
+        #     rol=rol,
+        #     activo=True,
+        # )
+        # return perfil
 
 
 class ProgramaFormacionCRUDSerializer(serializers.ModelSerializer):
@@ -108,31 +108,31 @@ class EgresadoListSerializer(serializers.Serializer):
     programa_id = serializers.IntegerField(required=False, allow_null=True)
     programa_nombre = serializers.CharField(required=False, allow_blank=True)
 
-def build_egresado_from_perfil(perfil: PerfilPracticante):
-    u = perfil.usuario
-    nombre = (f"{u.first_name or ''} {u.last_name or ''}".strip()) or (u.username or u.email or "Egresado")
+# def build_egresado_from_perfil(perfil: PerfilPracticante):
+#     u = perfil.usuario
+#     nombre = (f"{u.first_name or ''} {u.last_name or ''}".strip()) or (u.username or u.email or "Egresado")
 
-    carrera = ""
-    programa_id = None
-    programa_nombre = ""
+#     carrera = ""
+#     programa_id = None
+#     programa_nombre = ""
 
-    if getattr(perfil, "programa_id", None):
-        programa_id = perfil.programa_id
-        try:
-            programa_nombre = perfil.programa.nombre
-        except Exception:
-            programa_nombre = ""
-        carrera = programa_nombre or ""
+#     if getattr(perfil, "programa_id", None):
+#         programa_id = perfil.programa_id
+#         try:
+#             programa_nombre = perfil.programa.nombre
+#         except Exception:
+#             programa_nombre = ""
+#         carrera = programa_nombre or ""
 
-    # Estado: si tu PerfilPracticante tiene un campo estado úsalo, si no dejamos "DISPONIBLE"
-    estado = getattr(perfil, "estado", None) or "DISPONIBLE"
+#     # Estado: si tu PerfilPracticante tiene un campo estado úsalo, si no dejamos "DISPONIBLE"
+#     estado = getattr(perfil, "estado", None) or "DISPONIBLE"
 
-    return {
-        "id": u.id,
-        "nombre": nombre,
-        "correo": u.email,
-        "carrera": carrera,
-        "estado": estado,
-        "programa_id": programa_id,
-        "programa_nombre": programa_nombre,
-    }
+#     return {
+#         "id": u.id,
+#         "nombre": nombre,
+#         "correo": u.email,
+#         "carrera": carrera,
+#         "estado": estado,
+#         "programa_id": programa_id,
+#         "programa_nombre": programa_nombre,
+#     }

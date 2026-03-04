@@ -15,7 +15,7 @@ const MENU_ITEMS = [
 const Sidebar = ({ activeView, onNavigate, perfilCompletado = 75 }) => (
   <aside className="sidebar">
     {/* Barra de completado de perfil */}
-    {/* <div className="sidebar__profile-bar">
+{/*     <div className="sidebar__profile-bar">
       <p className="sidebar__profile-bar-title">Completado del Perfil</p>
       <p className="sidebar__profile-bar-percent">{perfilCompletado}%</p>
       <div className="sidebar__profile-bar-track">

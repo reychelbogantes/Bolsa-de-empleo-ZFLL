@@ -1,4 +1,4 @@
-import api from "./apiClient";
+import api from "../apiClient";
 
 export async function getPasantiasDashboard() {
   const res = await api.get("/pasantias-dashboard/");

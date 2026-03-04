@@ -4,7 +4,7 @@
     position: absolute;
     top: calc(100% + 0.5rem);
     right: 0;
-    width: 380px;
+    width: auto;
     max-height: 520px;
     background: #fff;
     border: 1px solid #e2e8f0;

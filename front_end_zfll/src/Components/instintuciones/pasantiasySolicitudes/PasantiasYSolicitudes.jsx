@@ -1,52 +1,87 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./pasantiasYSolicitudes.css";
+
+import {
+  getPasantiasDashboard,
+  getSolicitudesRecibidas,
+  getSolicitudesEnviadas,
+} from "../../../Services/instintuciones/pasantiasDashboardService";
 
 export default function PasantiasYSolicitudes() {
   const [tab, setTab] = useState("busqueda");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // MOCK - luego lo conectamos a API
-  const pasantias = [
-    {
-      id: 1,
-      empresa: "Intel",
-      carrera: "Ing. Electrónica",
-      ubicacion: "Heredia",
-      duracion: "6 meses",
-      descripcion: "Pasantía en diseño de circuitos integrados.",
-    },
-    {
-      id: 2,
-      empresa: "Boston Scientific",
-      carrera: "Ing. Producción",
-      ubicacion: "Alajuela",
-      duracion: "4 meses",
-      descripcion: "Optimización de líneas de manufactura médica.",
-    },
-    {
-      id: 3,
-      empresa: "Microsoft",
-      carrera: "Computación",
-      ubicacion: "San José",
-      duracion: "3 meses",
-      descripcion: "Desarrollo de herramientas internas con Azure.",
-    },
-  ];
+  const [pasantias, setPasantias] = useState([]);      // ✅ API
+  const [solicitudes, setSolicitudes] = useState([]);  // ✅ API
 
-  const solicitudes = [
-    { id: 101, empresa: "HP", carrera: "Computación", fecha: "2026-03-01", estado: "Pendiente" },
-    { id: 102, empresa: "Accenture", carrera: "Administración", fecha: "2026-03-02", estado: "Pendiente" },
-  ];
-
-  const filteredPasantias = pasantias.filter((p) => {
-    const q = search.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      p.empresa.toLowerCase().includes(q) ||
-      p.carrera.toLowerCase().includes(q) ||
-      p.ubicacion.toLowerCase().includes(q)
-    );
+  // mapper tolerante (backend -> UI)
+  const mapPasantia = (p) => ({
+    id: p.id,
+    empresa: p.empresa ?? p.company ?? p.company_name ?? "Empresa",
+    carrera: p.carrera ?? p.career ?? p.programa ?? "—",
+    ubicacion: p.ubicacion ?? p.location ?? "—",
+    duracion: p.duracion ?? p.duration ?? "—",
+    descripcion: p.descripcion ?? p.description ?? "—",
+    _raw: p,
   });
+
+  const mapSolicitud = (s) => ({
+    id: s.id,
+    empresa: s.empresa ?? s.company ?? s.company_name ?? "Empresa",
+    carrera: s.carrera ?? s.career ?? s.programa ?? "—",
+    fecha: s.fecha ?? s.created_at ?? s.createdAt ?? "",
+    estado: s.estado ?? s.status ?? "Pendiente",
+    _raw: s,
+  });
+
+  // ✅ fetch inicial
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+
+        // opción A: endpoint dashboard ya trae todo
+        const dash = await getPasantiasDashboard();
+
+        // ✅ asumimos: enviadas = pasantías disponibles / recibidas = solicitudes de empresas
+        const enviadas = Array.isArray(dash?.enviadas) ? dash.enviadas : [];
+        const recibidas = Array.isArray(dash?.recibidas) ? dash.recibidas : [];
+
+        setPasantias(enviadas.map(mapPasantia));
+        setSolicitudes(recibidas.map(mapSolicitud));
+
+        // opción B (fallback): si el dashboard no viene completo, usamos endpoints separados
+        if (!enviadas.length) {
+          const env = await getSolicitudesEnviadas();
+          setPasantias((Array.isArray(env) ? env : []).map(mapPasantia));
+        }
+        if (!recibidas.length) {
+          const rec = await getSolicitudesRecibidas();
+          setSolicitudes((Array.isArray(rec) ? rec : []).map(mapSolicitud));
+        }
+      } catch (err) {
+        console.error("Error pasantias-dashboard:", err);
+        setPasantias([]);
+        setSolicitudes([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const filteredPasantias = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return pasantias;
+
+    return pasantias.filter((p) => {
+      return (
+        (p.empresa || "").toLowerCase().includes(q) ||
+        (p.carrera || "").toLowerCase().includes(q) ||
+        (p.ubicacion || "").toLowerCase().includes(q)
+      );
+    });
+  }, [search, pasantias]);
 
   const countSolicitudes = solicitudes.length;
 
@@ -75,7 +110,9 @@ export default function PasantiasYSolicitudes() {
         </button>
       </div>
 
-      {tab === "busqueda" ? (
+      {loading ? (
+        <div style={{ padding: 12 }}>Cargando...</div>
+      ) : tab === "busqueda" ? (
         <>
           <div className="ps-searchCard">
             <div className="ps-searchBox">
@@ -92,7 +129,7 @@ export default function PasantiasYSolicitudes() {
             {filteredPasantias.map((p) => (
               <div key={p.id} className="ps-card">
                 <div className="ps-cardTop">
-                  <div className="ps-avatar">{p.empresa.slice(0, 1)}</div>
+                  <div className="ps-avatar">{(p.empresa || "E").slice(0, 1)}</div>
                   <div className="ps-cardTitle">
                     <div className="ps-company">{p.empresa}</div>
                     <div className="ps-career">{p.carrera}</div>
@@ -117,6 +154,10 @@ export default function PasantiasYSolicitudes() {
                 </button>
               </div>
             ))}
+
+            {!filteredPasantias.length ? (
+              <div style={{ padding: 12 }}>No hay pasantías para mostrar.</div>
+            ) : null}
           </div>
         </>
       ) : (
@@ -133,7 +174,7 @@ export default function PasantiasYSolicitudes() {
             <div key={s.id} className="ps-tableRow">
               <div className="ps-td">{s.empresa}</div>
               <div className="ps-td">{s.carrera}</div>
-              <div className="ps-td">{s.fecha}</div>
+              <div className="ps-td">{s.fecha ? String(s.fecha).slice(0, 10) : ""}</div>
               <div className="ps-td">
                 <span className="ps-chip">{s.estado}</span>
               </div>
@@ -144,6 +185,10 @@ export default function PasantiasYSolicitudes() {
               </div>
             </div>
           ))}
+
+          {!solicitudes.length ? (
+            <div style={{ padding: 12 }}>No hay solicitudes por mostrar.</div>
+          ) : null}
         </div>
       )}
     </div>

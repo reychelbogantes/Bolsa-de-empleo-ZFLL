@@ -3,6 +3,7 @@
  * Gestión del perfil profesional del aspirante:
  * descripción, carta de presentación, soft/power skills,
  * instituciones, títulos académicos y CV.
+ * Conectado con la API — sin datos mock.
  */
 import { useState, useRef } from 'react';
 import {
@@ -27,22 +28,25 @@ const Tag = ({ label, color = 'blue', onRemove, icon }) => (
 const REGISTERED_INSTITUTIONS = ['TEC', 'INA', 'UCR', 'ULACIT', 'CUC', 'Centro Cultural'];
 
 /* ─── Main Component ──────────────────────────────── */
-const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave, onUploadCV, onDeleteTitulo, onNotify }) => {
-  const [isPublic, setIsPublic]     = useState(perfil.visible ?? true);
-  const [bio, setBio]               = useState(perfil.resumen_profesional || '');
-  const [carta, setCarta]           = useState(perfil.carta_presentacion  || '');
-  const [softSkills, setSoftSkills] = useState(perfil.soft_skills || ['Trabajo en equipo', 'Comunicación asertiva', 'Liderazgo']);
-  const [powerSkills, setPowerSkills] = useState(perfil.power_skills || ['Pensamiento Crítico', 'Resolución de Problemas', 'Inteligencia Emocional']);
-  const [newSoft, setNewSoft]       = useState('');
-  const [newPower, setNewPower]     = useState('');
-  const [institutions, setInstitutions] = useState(perfil.instituciones || []);
-  const [instSearch, setInstSearch]   = useState('');
+const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave, onUploadCV, onUploadTitulo, onDeleteTitulo, onNotify }) => {
+  const extra = perfil?.extra_data || {};
+
+  const [isPublic, setIsPublic] = useState(extra.visible ?? true);
+  const [bio, setBio] = useState(perfil.resumen_profesional || '');
+  const [carta, setCarta] = useState(extra.carta_presentacion || '');
+  const [softSkills, setSoftSkills] = useState(extra.soft_skills || []);
+  const [powerSkills, setPowerSkills] = useState(extra.power_skills || []);
+  const [newSoft, setNewSoft] = useState('');
+  const [newPower, setNewPower] = useState('');
+  const [institutions, setInstitutions] = useState(extra.instituciones || []);
+  const [instSearch, setInstSearch] = useState('');
   const [showInstDrop, setShowInstDrop] = useState(false);
+  const [saving, setSaving] = useState(false);
   const cvInputRef = useRef(null);
   const tituloInputRef = useRef(null);
 
   /* Skills helpers */
-  const addSoft  = () => { if (newSoft.trim())  { setSoftSkills([...softSkills, newSoft.trim()]);  setNewSoft(''); } };
+  const addSoft = () => { if (newSoft.trim()) { setSoftSkills([...softSkills, newSoft.trim()]); setNewSoft(''); } };
   const addPower = () => { if (newPower.trim()) { setPowerSkills([...powerSkills, newPower.trim()]); setNewPower(''); } };
 
   const addInstitution = (name) => {
@@ -54,19 +58,27 @@ const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave,
     i => i.toLowerCase().includes(instSearch.toLowerCase()) && !institutions.includes(i)
   );
 
-  const handleSave = () => {
-    onSave && onSave({ bio, carta, softSkills, powerSkills, institutions, isPublic });
-    onNotify && onNotify('¡Perfil profesional actualizado correctamente!');
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await onSave({ bio, carta, softSkills, powerSkills, institutions, isPublic });
+    } catch (err) {
+      onNotify && onNotify('Error al guardar: ' + err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCVUpload = (e) => {
     const file = e.target.files[0];
-    if (file) { onUploadCV && onUploadCV(file); onNotify && onNotify('CV subido exitosamente.'); }
+    if (file && onUploadCV) onUploadCV(file);
+    e.target.value = ''; // reset para permitir subir el mismo archivo
   };
 
   const handleTituloUpload = (e) => {
     const file = e.target.files[0];
-    if (file) { onNotify && onNotify(`Título "${file.name}" cargado.`); }
+    if (file && onUploadTitulo) onUploadTitulo(file);
+    e.target.value = '';
   };
 
   return (
@@ -209,8 +221,8 @@ const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave,
             </div>
 
             <div className="pp-save-row">
-              <button className="pp-btn-save" onClick={handleSave}>
-                <CheckCircle size={16} /> Guardar Perfil
+              <button className="pp-btn-save" onClick={handleSave} disabled={saving}>
+                <CheckCircle size={16} /> {saving ? 'Guardando...' : 'Guardar Perfil'}
               </button>
             </div>
           </div>
@@ -223,32 +235,25 @@ const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave,
 
             <div className="pp-titles-list">
               {titulos.length === 0 ? (
-                [
-                  { title: 'Bachillerato en Ingeniería en Producción Industrial', institution: 'TEC', year: '2024', file: 'Titulo_Ingenieria.pdf' },
-                  { title: 'Técnico en Control de Calidad', institution: 'INA', year: '2021', file: 'Certificado_INA.pdf' },
-                ].map((edu, i) => (
-                  <div key={i} className="pp-title-item">
-                    <div className="pp-title-icon"><Award size={22} /></div>
-                    <div className="pp-title-info">
-                      <p className="pp-title-name">{edu.title}</p>
-                      <p className="pp-title-meta">{edu.institution} · {edu.year}</p>
-                      <div className="pp-title-file"><FileText size={11} /> {edu.file}</div>
-                    </div>
-                    <div className="pp-title-actions">
-                      <button className="pp-icon-btn" title="Descargar"><Download size={16} /></button>
-                      <button className="pp-icon-btn pp-icon-btn--del" onClick={() => onDeleteTitulo && onDeleteTitulo(i)} title="Eliminar"><Trash2 size={16} /></button>
-                    </div>
-                  </div>
-                ))
-              ) : titulos.map((edu, i) => (
-                <div key={i} className="pp-title-item">
+                <div className="pp-empty-titles">
+                  <Award size={32} />
+                  <p>No tienes títulos académicos registrados.</p>
+                  <p className="pp-empty-hint">Sube tus títulos o certificaciones para fortalecer tu perfil.</p>
+                </div>
+              ) : titulos.map((edu) => (
+                <div key={edu.id} className="pp-title-item">
                   <div className="pp-title-icon"><Award size={22} /></div>
                   <div className="pp-title-info">
-                    <p className="pp-title-name">{edu.titulo || edu.title}</p>
-                    <p className="pp-title-meta">{edu.institution} · {edu.year}</p>
+                    <p className="pp-title-name">{edu.nombre_original || edu.archivo || 'Documento'}</p>
+                    <p className="pp-title-meta">{edu.tipo_documento || 'Certificado'} · {edu.fecha_creacion ? new Date(edu.fecha_creacion).toLocaleDateString() : ''}</p>
                   </div>
                   <div className="pp-title-actions">
-                    <button className="pp-icon-btn pp-icon-btn--del" onClick={() => onDeleteTitulo && onDeleteTitulo(edu.id || i)}><Trash2 size={16} /></button>
+                    {edu.archivo && (
+                      <a href={edu.archivo} target="_blank" rel="noopener noreferrer" className="pp-icon-btn" title="Descargar">
+                        <Download size={16} />
+                      </a>
+                    )}
+                    <button className="pp-icon-btn pp-icon-btn--del" onClick={() => onDeleteTitulo && onDeleteTitulo(edu.id)} title="Eliminar"><Trash2 size={16} /></button>
                   </div>
                 </div>
               ))}
@@ -286,16 +291,12 @@ const PerfilProfesional = ({ perfil = {}, cvVersions = [], titulos = [], onSave,
             </div>
             <div className="pp-cv-list">
               {cvVersions.length === 0 ? (
-                <div className="pp-cv-item pp-cv-item--active">
-                  <div className="pp-cv-icon"><FileText size={18} /></div>
-                  <div className="pp-cv-info">
-                    <p className="pp-cv-name">CV_Principal.pdf</p>
-                    <p className="pp-cv-meta">Versión predeterminada · Actualizado hace 2 días</p>
-                  </div>
-                  <CheckCircle size={16} className="pp-cv-check" />
+                <div className="pp-empty-titles" style={{ padding: '1rem' }}>
+                  <FileText size={28} />
+                  <p>No tienes CVs registrados. Sube tu primer CV.</p>
                 </div>
-              ) : cvVersions.map((cv, i) => (
-                <div key={i} className={`pp-cv-item ${cv.es_predeterminado ? 'pp-cv-item--active' : ''}`}>
+              ) : cvVersions.map((cv) => (
+                <div key={cv.id} className={`pp-cv-item ${cv.es_predeterminado ? 'pp-cv-item--active' : ''}`}>
                   <div className="pp-cv-icon"><FileText size={18} /></div>
                   <div className="pp-cv-info">
                     <p className="pp-cv-name">{cv.nombre_etiqueta || cv.archivo}</p>

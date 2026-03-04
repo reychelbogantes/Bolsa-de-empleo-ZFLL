@@ -1,38 +1,35 @@
 /**
  * ApplyModal.jsx
  * Modal de confirmación de postulación.
+ * Usa CVs reales del backend (recibidos por props).
  * Props:
- *  - job: objeto con { title, companyName, description, requirements[] }
- *  - cvVersions: array de { id, nombre_etiqueta, es_predeterminado }
+ *  - job: objeto con { id, title, companyName, description, requirements[], location }
+ *  - cvVersions: array de { id, nombre_etiqueta, es_predeterminado } (del backend)
  *  - isOpen: boolean
  *  - onClose: fn()
  *  - onSubmit: fn({ cvId, newCvFile, descripcion })
  */
 import { useState, useEffect, useRef } from 'react';
-import { X, FileText, CheckCircle, Send, MapPin, Briefcase, Upload, Plus } from 'lucide-react';
+import { X, FileText, CheckCircle, Send, MapPin, Briefcase, Upload } from 'lucide-react';
 import './ApplyModal.css';
-
-const SAMPLE_CVS = [
-  { id: 1, nombre_etiqueta: 'CV_Principal.pdf',   es_predeterminado: true  },
-  { id: 2, nombre_etiqueta: 'CV_Ingles_2024.pdf', es_predeterminado: false },
-];
 
 const MAX_DESC = 500;
 
 const ApplyModal = ({
-  job        = null,
-  cvVersions = null,
-  isOpen     = false,
-  onClose    = () => {},
-  onSubmit   = () => {},
+  job = null,
+  cvVersions = [],
+  isOpen = false,
+  onClose = () => { },
+  onSubmit = () => { },
 }) => {
-  const cvs        = cvVersions ?? SAMPLE_CVS;
-  const defaultCV  = cvs.find(c => c.es_predeterminado) || cvs[0];
+  const cvs = cvVersions;
+  const defaultCV = cvs.find(c => c.es_predeterminado) || cvs[0];
 
-  const [selectedCV,  setSelectedCV]  = useState(defaultCV?.id ?? null);
-  const [newCvFile,   setNewCvFile]   = useState(null);       // archivo subido localmente
+  const [selectedCV, setSelectedCV] = useState(defaultCV?.id ?? null);
+  const [newCvFile, setNewCvFile] = useState(null);
   const [descripcion, setDescripcion] = useState('');
-  const [submitted,   setSubmitted]   = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
   /* Reset on open */
@@ -42,8 +39,9 @@ const ApplyModal = ({
       setNewCvFile(null);
       setDescripcion('');
       setSubmitted(false);
+      setSubmitting(false);
     }
-  }, [isOpen]);
+  }, [isOpen, defaultCV?.id]);
 
   if (!isOpen || !job) return null;
 
@@ -51,20 +49,25 @@ const ApplyModal = ({
     const file = e.target.files[0];
     if (!file) return;
     setNewCvFile(file);
-    setSelectedCV(null); // deseleccionar CV guardado al subir uno nuevo
+    setSelectedCV(null);
   };
 
   const handleSelectSaved = (id) => {
     setSelectedCV(id);
-    setNewCvFile(null); // limpiar archivo nuevo si elige uno guardado
+    setNewCvFile(null);
   };
 
-  const canSubmit = selectedCV !== null || newCvFile !== null;
+  const canSubmit = (selectedCV !== null || newCvFile !== null) && !submitting;
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    onSubmit({ cvId: selectedCV, newCvFile, descripcion });
-    setTimeout(() => onClose(), 1800);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      await onSubmit({ cvId: selectedCV, newCvFile, descripcion });
+      setSubmitted(true);
+      setTimeout(() => onClose(), 1800);
+    } catch {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -149,29 +152,35 @@ const ApplyModal = ({
                 <h4 className="am-cv-title"><FileText size={15} /> Selecciona tu CV</h4>
 
                 {/* Saved CVs */}
-                <div className="am-cv-list">
-                  {cvs.map(cv => (
-                    <label
-                      key={cv.id}
-                      className={`am-cv-option ${selectedCV === cv.id ? 'selected' : ''}`}
-                    >
-                      <input
-                        type="radio"
-                        name="cv-select"
-                        checked={selectedCV === cv.id}
-                        onChange={() => handleSelectSaved(cv.id)}
-                      />
-                      <div className="am-cv-icon"><FileText size={16} /></div>
-                      <div className="am-cv-info">
-                        <p className="am-cv-name">{cv.nombre_etiqueta}</p>
-                        <p className="am-cv-meta">
-                          {cv.es_predeterminado ? 'Versión predeterminada' : 'Versión alternativa'}
-                        </p>
-                      </div>
-                      {selectedCV === cv.id && <CheckCircle size={16} className="am-cv-check" />}
-                    </label>
-                  ))}
-                </div>
+                {cvs.length === 0 ? (
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', padding: '0.5rem 0' }}>
+                    No tienes CVs guardados. Sube un CV para continuar.
+                  </p>
+                ) : (
+                  <div className="am-cv-list">
+                    {cvs.map(cv => (
+                      <label
+                        key={cv.id}
+                        className={`am-cv-option ${selectedCV === cv.id ? 'selected' : ''}`}
+                      >
+                        <input
+                          type="radio"
+                          name="cv-select"
+                          checked={selectedCV === cv.id}
+                          onChange={() => handleSelectSaved(cv.id)}
+                        />
+                        <div className="am-cv-icon"><FileText size={16} /></div>
+                        <div className="am-cv-info">
+                          <p className="am-cv-name">{cv.nombre_etiqueta}</p>
+                          <p className="am-cv-meta">
+                            {cv.es_predeterminado ? 'Versión predeterminada' : 'Versión alternativa'}
+                          </p>
+                        </div>
+                        {selectedCV === cv.id && <CheckCircle size={16} className="am-cv-check" />}
+                      </label>
+                    ))}
+                  </div>
+                )}
 
                 {/* Divider */}
                 <div className="am-cv-divider">
@@ -223,7 +232,7 @@ const ApplyModal = ({
             <div className="am-footer">
               <button className="am-btn am-btn--cancel" onClick={onClose}>Cancelar</button>
               <button className="am-btn am-btn--submit" onClick={handleSubmit} disabled={!canSubmit}>
-                <Send size={15} /> Confirmar Postulación
+                <Send size={15} /> {submitting ? 'Enviando...' : 'Confirmar Postulación'}
               </button>
             </div>
           </>

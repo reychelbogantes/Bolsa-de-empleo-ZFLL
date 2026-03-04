@@ -17,7 +17,6 @@ export default function VacantesDisponibles() {
   const [searchStd, setSearchStd] = useState("");
   const [selectedStdIds, setSelectedStdIds] = useState([]);
 
-  // 🔥 MOCK estudiantes (por ahora)
   const estudiantes = [
     { id: 1, nombre: "Jimena Alfaro", carrera: "ING. ELECTRÓNICA" },
     { id: 2, nombre: "Daniel Brenes", carrera: "ING. PRODUCCIÓN" },
@@ -35,7 +34,7 @@ export default function VacantesDisponibles() {
       .replace(/[\u0300-\u036f]/g, "")
       .trim();
 
-  // ✅ mapper tolerante (por si backend usa title/company/etc)
+
   const mapVacante = (v) => {
     const puesto = v.puesto ?? v.title ?? v.titulo ?? v.position ?? "Vacante";
     const empresa =
@@ -73,7 +72,7 @@ export default function VacantesDisponibles() {
     };
   };
 
-  // ✅ FETCH REAL
+  
   useEffect(() => {
     (async () => {
       try {
