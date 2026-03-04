@@ -15,6 +15,9 @@ import { getPendingCompanies }    from '../../Services/Admin/Companyservice.js';
 import { getPendingInstitutions } from '../../Services/Admin/institutionService.js';
 
 import styles from './AdminPanel.module.css';
+import SearchAspirants from '../../Components/Admin/Search/SearchAspirants.jsx';
+import SearchInstitutions from '../../Components/Admin/Search/SearchInstitutions.jsx';
+import SearchCompanies from '../../Components/Admin/Search/SearchCompanies.jsx';
 
 /* ─── Títulos visibles en el header de página ─── */
 const PAGE_TITLES = {
@@ -40,9 +43,9 @@ const renderSection = (tab, onPendingChange) => {
     case 'vacancies':    return <Vacancies onCountChange={(n) => onPendingChange('vacancies', n)} />;
     case 'forms':        return <Forms onCountChange={(n) => onPendingChange('forms', n)} />;
     case 'admins':       return <Admins />;
-    case 'search_companies':
-    case 'search_institutions':
-    case 'search_aspirants':
+    case 'search_companies': return <SearchCompanies />;
+    case 'search_institutions': return <SearchInstitutions />;
+    case 'search_aspirants': return <SearchAspirants />;
       return (
         <div style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
           Módulo "{PAGE_TITLES[tab]?.title}" — próximamente.

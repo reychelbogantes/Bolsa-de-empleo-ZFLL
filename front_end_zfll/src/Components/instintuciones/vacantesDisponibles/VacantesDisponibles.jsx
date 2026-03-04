@@ -17,7 +17,7 @@ export default function VacantesDisponibles() {
   const [searchStd, setSearchStd] = useState("");
   const [selectedStdIds, setSelectedStdIds] = useState([]);
 
-  // 🔥 MOCK estudiantes (por ahora)
+  // ✅ MOCK estudiantes (como antes)
   const estudiantes = [
     { id: 1, nombre: "Jimena Alfaro", carrera: "ING. ELECTRÓNICA" },
     { id: 2, nombre: "Daniel Brenes", carrera: "ING. PRODUCCIÓN" },
@@ -25,6 +25,49 @@ export default function VacantesDisponibles() {
     { id: 4, nombre: "Ricardo Mora", carrera: "ING. MECATRÓNICA" },
     { id: 5, nombre: "Elena Rojas", carrera: "ING. COMPUTACIÓN", badge: "Ver Perfil" },
     { id: 6, nombre: "Marco Vargas", carrera: "ING. ELECTRÓNICA" },
+  ];
+
+  // ✅ MOCK vacantes (como antes)
+  const MOCK_VACANTES = [
+    {
+      id: 1,
+      puesto: "Ingeniero de Software Senior",
+      empresa: "INTEL",
+      area: "TI",
+      correo: "jobs@intel.com",
+      tipo: "Tiempo Completo",
+      modalidad: "Híbrido",
+      ubicacion: "Heredia, Costa Rica",
+      descripcion:
+        "Buscamos un Ingeniero de Software Senior con experiencia en React y Node.js para liderar proyectos críticos.",
+      requisitos: ["5+ años de experiencia", "React/Next.js", "Node.js/Express", "Inglés B2+"],
+    },
+    {
+      id: 2,
+      puesto: "Técnico en Electromecánica",
+      empresa: "BOSTON SCIENTIFIC",
+      area: "Mantenimiento",
+      correo: "talento@bostonscientific.com",
+      tipo: "Tiempo Completo",
+      modalidad: "Presencial",
+      ubicacion: "Cartago, Costa Rica",
+      descripcion:
+        "Responsable de mantenimiento preventivo y correctivo en equipos industriales, siguiendo procedimientos y reportes.",
+      requisitos: ["Electromecánica", "PLC básico", "Turnos", "Trabajo bajo presión"],
+    },
+    {
+      id: 3,
+      puesto: "Analista de Datos Jr",
+      empresa: "MICROSOFT",
+      area: "BI",
+      correo: "jobs@microsoft.com",
+      tipo: "Medio Tiempo",
+      modalidad: "Remoto",
+      ubicacion: "Remoto",
+      descripcion:
+        "Apoyo en reportes, dashboards y análisis de datos. Limpieza y generación de insights para negocio.",
+      requisitos: ["SQL básico", "Excel", "Power BI/Tableau", "Comunicación"],
+    },
   ];
 
   const norm = (s = "") =>
@@ -35,7 +78,7 @@ export default function VacantesDisponibles() {
       .replace(/[\u0300-\u036f]/g, "")
       .trim();
 
-  // ✅ mapper tolerante (por si backend usa title/company/etc)
+  // ✅ mapper tolerante por si backend usa otros nombres
   const mapVacante = (v) => {
     const puesto = v.puesto ?? v.title ?? v.titulo ?? v.position ?? "Vacante";
     const empresa =
@@ -59,7 +102,7 @@ export default function VacantesDisponibles() {
         : [];
 
     return {
-      id: v.id,
+      id: v.id ?? Math.random(),
       puesto,
       empresa,
       area,
@@ -73,7 +116,7 @@ export default function VacantesDisponibles() {
     };
   };
 
-  // ✅ FETCH REAL
+  // ✅ FETCH real + fallback a mock (como antes)
   useEffect(() => {
     (async () => {
       try {
@@ -82,10 +125,14 @@ export default function VacantesDisponibles() {
         const data = await listVacantes();
         const list = Array.isArray(data) ? data : [];
 
-        setVacantes(list.map(mapVacante));
+        if (list.length) {
+          setVacantes(list.map(mapVacante));
+        } else {
+          setVacantes(MOCK_VACANTES);
+        }
       } catch (err) {
-        console.error("Error cargando vacantes:", err);
-        setVacantes([]);
+        console.error("Error cargando vacantes (fallback mock):", err);
+        setVacantes(MOCK_VACANTES);
       } finally {
         setLoading(false);
       }
@@ -107,7 +154,9 @@ export default function VacantesDisponibles() {
   const filteredEstudiantes = useMemo(() => {
     const q = norm(searchStd);
     if (!q) return estudiantes;
-    return estudiantes.filter((s) => [s.nombre, s.carrera].map(norm).join(" ").includes(q));
+    return estudiantes.filter((s) =>
+      [s.nombre, s.carrera].map(norm).join(" ").includes(q)
+    );
   }, [searchStd]);
 
   const openDetalle = (v) => {

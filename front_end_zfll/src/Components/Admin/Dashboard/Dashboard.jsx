@@ -3,7 +3,7 @@ import { Building2, GraduationCap, Users, FileText } from 'lucide-react';
 import Card from '../Card/Card';
 import styles from './Dashboard.module.css';
 import { getDashboardStats, getPendingRegistrations, getAuditLogs } from '../../../Services/Admin/auditService.js';
-import { MOCK_COMPANIES, MOCK_INSTITUTIONS, MOCK_ASPIRANTS, MOCK_VACANCIES, MOCK_AUDIT } from '../../../constants';
+import { MOCK_COMPANIES, MOCK_INSTITUTIONS, MOCK_ASPIRANTS, MOCK_VACANCIES, MOCK_AUDIT } from './constants';
 
 const STATS_CONFIG = [
   { key: 'companies',    label: 'Empresas',         icon: Building2,    cls: styles.blue   },

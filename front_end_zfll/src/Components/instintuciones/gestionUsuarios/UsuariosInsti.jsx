@@ -1,480 +1,386 @@
-import React, { useMemo, useState, useEffect } from "react";
-import "./UsuariosInsti.css";
+import React, { useEffect, useMemo, useState } from "react";
+/* import "./VacantesDisponibles.css"; */
 import Modal from "../modal/Modal";
-import Swal from "sweetalert2";
 
-import {
-  getUsuariosInstitucion,
-  createUsuarioInstitucion,
-  updateUsuarioInstitucion,
-  deleteUsuarioInstitucion,
-} from "../../../Services/instintuciones/usuariosInstitucionesService";
+import { listVacantes } from "../../../Services/instintuciones/vacantesDisponiblesService";
 
-export default function UsuariosInsti() {
-  const [showNuevo, setShowNuevo] = useState(false);
-  const [showEditar, setShowEditar] = useState(false);
-
-  const [usuarios, setUsuarios] = useState([]); // ✅ sin quemados
+export default function VacantesDisponibles() {
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [vacantes, setVacantes] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [showDetalle, setShowDetalle] = useState(false);
 
-  const [formNuevo, setFormNuevo] = useState({
-    nombre: "",
-    correo: "",
-    rol: "Profesor",
-    passTemp: "",
-  });
+  // ===== MODAL RECOMENDAR =====
+  const [showRecomendar, setShowRecomendar] = useState(false);
+  const [recomText, setRecomText] = useState("");
+  const [searchStd, setSearchStd] = useState("");
+  const [selectedStdIds, setSelectedStdIds] = useState([]);
 
-  const [formEditar, setFormEditar] = useState({
-    id: null,
-    nombre: "",
-    correo: "",
-    rol: "Profesor",
-  });
+  // ✅ MOCK estudiantes (como antes)
+  const estudiantes = [
+    { id: 1, nombre: "Jimena Alfaro", carrera: "ING. ELECTRÓNICA" },
+    { id: 2, nombre: "Daniel Brenes", carrera: "ING. PRODUCCIÓN" },
+    { id: 3, nombre: "Sofía Méndez", carrera: "ING. COMPUTACIÓN" },
+    { id: 4, nombre: "Ricardo Mora", carrera: "ING. MECATRÓNICA" },
+    { id: 5, nombre: "Elena Rojas", carrera: "ING. COMPUTACIÓN", badge: "Ver Perfil" },
+    { id: 6, nombre: "Marco Vargas", carrera: "ING. ELECTRÓNICA" },
+  ];
 
-  // Solo para UI (ya no lo usamos para crear IDs, pero lo dejo por si lo ocupás)
-  const nextId = useMemo(() => {
-    return (usuarios.reduce((max, u) => Math.max(max, u.id), 0) || 0) + 1;
-  }, [usuarios]);
+  // ✅ MOCK vacantes (como antes)
+  const MOCK_VACANTES = [
+    {
+      id: 1,
+      puesto: "Ingeniero de Software Senior",
+      empresa: "INTEL",
+      area: "TI",
+      correo: "jobs@intel.com",
+      tipo: "Tiempo Completo",
+      modalidad: "Híbrido",
+      ubicacion: "Heredia, Costa Rica",
+      descripcion:
+        "Buscamos un Ingeniero de Software Senior con experiencia en React y Node.js para liderar proyectos críticos.",
+      requisitos: ["5+ años de experiencia", "React/Next.js", "Node.js/Express", "Inglés B2+"],
+    },
+    {
+      id: 2,
+      puesto: "Técnico en Electromecánica",
+      empresa: "BOSTON SCIENTIFIC",
+      area: "Mantenimiento",
+      correo: "talento@bostonscientific.com",
+      tipo: "Tiempo Completo",
+      modalidad: "Presencial",
+      ubicacion: "Cartago, Costa Rica",
+      descripcion:
+        "Responsable de mantenimiento preventivo y correctivo en equipos industriales, siguiendo procedimientos y reportes.",
+      requisitos: ["Electromecánica", "PLC básico", "Turnos", "Trabajo bajo presión"],
+    },
+    {
+      id: 3,
+      puesto: "Analista de Datos Jr",
+      empresa: "MICROSOFT",
+      area: "BI",
+      correo: "jobs@microsoft.com",
+      tipo: "Medio Tiempo",
+      modalidad: "Remoto",
+      ubicacion: "Remoto",
+      descripcion:
+        "Apoyo en reportes, dashboards y análisis de datos. Limpieza y generación de insights para negocio.",
+      requisitos: ["SQL básico", "Excel", "Power BI/Tableau", "Comunicación"],
+    },
+  ];
 
-  const emailOk = (correo) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+  const norm = (s = "") =>
+    s
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
 
-  const normalizeRol = (rol) => {
-    const r = (rol || "").toLowerCase();
-    if (r.includes("admin")) return "ADMINISTRADOR";
-    if (r.includes("staff")) return "STAFF";
-    return "PROFESOR";
+  // ✅ mapper tolerante por si backend usa otros nombres
+  const mapVacante = (v) => {
+    const puesto = v.puesto ?? v.title ?? v.titulo ?? v.position ?? "Vacante";
+    const empresa =
+      v.empresa ??
+      v.company ??
+      v.company_name ??
+      v.empresa_nombre ??
+      "Empresa";
+    const area = v.area ?? v.category ?? v.departamento ?? "—";
+    const correo = v.correo ?? v.email ?? v.contact_email ?? "";
+    const tipo = v.tipo ?? v.contract_type ?? v.type ?? "—";
+    const modalidad = v.modalidad ?? v.work_mode ?? v.modality ?? "—";
+    const ubicacion = v.ubicacion ?? v.location ?? "—";
+    const descripcion = v.descripcion ?? v.description ?? "Sin descripción disponible.";
+
+    const reqRaw = v.requisitos ?? v.requirements ?? v.skills ?? [];
+    const requisitos = Array.isArray(reqRaw)
+      ? reqRaw
+      : typeof reqRaw === "string"
+        ? reqRaw.split(",").map((x) => x.trim()).filter(Boolean)
+        : [];
+
+    return {
+      id: v.id ?? Math.random(),
+      puesto,
+      empresa,
+      area,
+      correo,
+      tipo,
+      modalidad,
+      ubicacion,
+      descripcion,
+      requisitos,
+      _raw: v,
+    };
   };
 
-  const rolToUi = (rolDB) => {
-    if (rolDB === "ADMINISTRADOR") return "Administrador";
-    if (rolDB === "STAFF") return "Staff";
-    return "Profesor";
-  };
-
-  const fmtFecha = (value) => {
-    if (!value) return "";
-    try {
-      return new Date(value).toLocaleDateString("es-CR");
-    } catch {
-      return String(value);
-    }
-  };
-
-  const mapUser = (u) => {
-    const nombre = u.nombre ?? u.full_name ?? u.name ?? "";
-    const correo = u.correo ?? u.email ?? "";
-    const rol = normalizeRol(u.rol ?? u.role ?? u.institucion_rol ?? "PROFESOR");
-    const fecha = fmtFecha(u.fecha ?? u.created_at ?? u.createdAt ?? "");
-    const locked = !!u.locked;
-
-    return { id: u.id, nombre, correo, rol, fecha, locked, _raw: u };
-  };
-
-  const reloadUsuarios = async () => {
-    const data = await getUsuariosInstitucion();
-    const list = Array.isArray(data) ? data : [];
-    setUsuarios(list.map(mapUser));
-  };
-
-  // ✅ LISTAR al cargar
+  // ✅ FETCH real + fallback a mock (como antes)
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        await reloadUsuarios();
+
+        const data = await listVacantes();
+        const list = Array.isArray(data) ? data : [];
+
+        if (list.length) {
+          setVacantes(list.map(mapVacante));
+        } else {
+          setVacantes(MOCK_VACANTES);
+        }
       } catch (err) {
-        setUsuarios([]);
-        Swal.fire({
-          icon: "error",
-          title: "No se pudieron cargar usuarios",
-          text: err?.response?.data?.detail || "Revisa el backend o tu token.",
-          confirmButtonColor: "#2563eb",
-        });
+        console.error("Error cargando vacantes (fallback mock):", err);
+        setVacantes(MOCK_VACANTES);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  // ===== NUEVO =====
-  const onChangeNuevo = (key) => (e) =>
-    setFormNuevo((p) => ({ ...p, [key]: e.target.value }));
+  const filtered = useMemo(() => {
+    if (!search) return vacantes;
+    const q = norm(search);
 
-  const closeNuevo = () => {
-    setShowNuevo(false);
-    setFormNuevo({ nombre: "", correo: "", rol: "Profesor", passTemp: "" });
-  };
-
-  const submitNuevo = async (e) => {
-    e.preventDefault();
-
-    const nombre = formNuevo.nombre.trim();
-    const correo = formNuevo.correo.trim();
-    const passTemp = formNuevo.passTemp.trim();
-
-    if (!nombre || !correo || !passTemp) {
-      Swal.fire({
-        icon: "error",
-        title: "Campos incompletos",
-        text: "Completa nombre, correo y contraseña temporal.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
-
-    if (!emailOk(correo)) {
-      Swal.fire({
-        icon: "error",
-        title: "Correo inválido",
-        text: "Revisa el formato del correo.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
-
-    const exists = usuarios.some(
-      (u) => (u.correo || "").toLowerCase() === correo.toLowerCase()
+    return vacantes.filter((v) =>
+      [v.puesto, v.empresa, v.area, v.tipo, v.modalidad, v.ubicacion]
+        .map(norm)
+        .join(" ")
+        .includes(q)
     );
-    if (exists) {
-      Swal.fire({
-        icon: "error",
-        title: "Correo duplicado",
-        text: "Ya existe un usuario con ese correo.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
+  }, [search, vacantes]);
 
-    try {
-      // ✅ POST backend
-      await createUsuarioInstitucion({
-        full_name: nombre,
-        email: correo,
-        password: passTemp,
-        rol: formNuevo.rol, // "Profesor" | "Staff" | "Administrador"
-      });
-
-      await reloadUsuarios();
-      closeNuevo();
-
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: "Usuario creado",
-        showConfirmButton: false,
-        timer: 2200,
-        timerProgressBar: true,
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "No se pudo crear",
-        text: err?.response?.data?.detail || "Error creando usuario.",
-        confirmButtonColor: "#2563eb",
-      });
-    }
-  };
-
-  // ===== EDITAR =====
-  const openEditar = (u) => {
-    setFormEditar({
-      id: u.id,
-      nombre: u.nombre,
-      correo: u.correo,
-      rol: rolToUi(u.rol),
-    });
-    setShowEditar(true);
-  };
-
-  const onChangeEditar = (key) => (e) =>
-    setFormEditar((p) => ({ ...p, [key]: e.target.value }));
-
-  const closeEditar = () => {
-    setShowEditar(false);
-    setFormEditar({ id: null, nombre: "", correo: "", rol: "Profesor" });
-  };
-
-  const submitEditar = async (e) => {
-    e.preventDefault();
-
-    const nombre = formEditar.nombre.trim();
-    const correo = formEditar.correo.trim();
-
-    if (!nombre || !correo) {
-      Swal.fire({
-        icon: "error",
-        title: "Campos incompletos",
-        text: "Completa nombre y correo.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
-    if (!emailOk(correo)) {
-      Swal.fire({
-        icon: "error",
-        title: "Correo inválido",
-        text: "Revisa el formato del correo.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
-
-    const exists = usuarios.some(
-      (u) =>
-        u.id !== formEditar.id &&
-        (u.correo || "").toLowerCase() === correo.toLowerCase()
+  const filteredEstudiantes = useMemo(() => {
+    const q = norm(searchStd);
+    if (!q) return estudiantes;
+    return estudiantes.filter((s) =>
+      [s.nombre, s.carrera].map(norm).join(" ").includes(q)
     );
-    if (exists) {
-      Swal.fire({
-        icon: "error",
-        title: "Correo duplicado",
-        text: "Ya existe otro usuario con ese correo.",
-        confirmButtonColor: "#2563eb",
-      });
-      return;
-    }
+  }, [searchStd]);
 
-    try {
-      // ✅ PATCH backend
-      await updateUsuarioInstitucion(formEditar.id, {
-        full_name: nombre,
-        email: correo,
-        rol: formEditar.rol, // "Profesor" | "Staff" | "Administrador"
-      });
-
-      await reloadUsuarios();
-      closeEditar();
-
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: "Cambios guardados",
-        showConfirmButton: false,
-        timer: 2200,
-        timerProgressBar: true,
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "No se pudo guardar",
-        text: err?.response?.data?.detail || "Error guardando cambios.",
-        confirmButtonColor: "#2563eb",
-      });
-    }
+  const openDetalle = (v) => {
+    setSelected(v);
+    setShowDetalle(true);
   };
 
-  // ===== ELIMINAR =====
-  const eliminar = (u) => {
-    if (u.locked) return;
+  const closeDetalle = () => {
+    setShowDetalle(false);
+    setSelected(null);
+  };
 
-    Swal.fire({
-      title: "¿Eliminar usuario?",
-      text: `Se eliminará a ${u.nombre}`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dc2626",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (res) => {
-      if (!res.isConfirmed) return;
+  const openRecomendar = () => setShowRecomendar(true);
 
-      try {
-        await deleteUsuarioInstitucion(u.id);
-        await reloadUsuarios();
+  const closeRecomendar = () => {
+    setShowRecomendar(false);
+    setRecomText("");
+    setSearchStd("");
+    setSelectedStdIds([]);
+  };
 
-        Swal.fire({
-          toast: true,
-          position: "top-end",
-          icon: "success",
-          title: "Usuario eliminado",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-        });
-      } catch (err) {
-        Swal.fire({
-          icon: "error",
-          title: "No se pudo eliminar",
-          text: err?.response?.data?.detail || "Error eliminando usuario.",
-          confirmButtonColor: "#2563eb",
-        });
-      }
-    });
+  const toggleStd = (id) => {
+    setSelectedStdIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const enviarRecomendacion = () => {
+    console.log("Vacante:", selected?._raw || selected);
+    console.log("Recomendación:", recomText);
+    console.log("Estudiantes:", selectedStdIds);
+
+    closeRecomendar();
+    setShowDetalle(false);
+    setSelected(null);
   };
 
   return (
-    <div className="gui-wrap">
-      <div className="gui-head">
-        <div>
-          <h2>Gestión de Usuarios Institucionales</h2>
-          <p>Administra los accesos de profesores y personal administrativo.</p>
-        </div>
-
-        <button
-          className="gui-btn"
-          type="button"
-          onClick={() => setShowNuevo(true)}
-          disabled={loading}
-        >
-          ➕ Nuevo Profesor/Staff
-        </button>
+    <div className="vd-wrap">
+      <div className="vd-head">
+        <h2>Vacantes Disponibles</h2>
+        <p>Explora las oportunidades laborales publicadas por las empresas para tus estudiantes.</p>
       </div>
 
-      <div className="gui-card">
-        <div className="gui-th">
-          <span>USUARIO</span>
-          <span>ROL</span>
-          <span>FECHA DE CREACIÓN</span>
-          <span>ACCIONES</span>
+      <div className="vd-card">
+        <div className="vd-search">
+          <span className="vd-ico">🔎</span>
+          <input
+            placeholder="Buscar por puesto o empresa..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         {loading ? (
-          <div style={{ padding: 14 }}>Cargando...</div>
-        ) : usuarios.length === 0 ? (
-          <div style={{ padding: 14 }}>Sin usuarios por mostrar.</div>
+          <div className="vd-loading">Cargando vacantes...</div>
         ) : (
-          usuarios.map((u) => (
-            <div key={u.id} className="gui-tr">
-              <div className="gui-user">
-                <div className="gui-avatar">{(u.nombre || "U").slice(0, 1)}</div>
-                <div className="gui-userText">
-                  <div className="gui-name">
-                    {u.nombre}
-                    {u.locked ? <span className="gui-dot">●</span> : null}
+          <div className="vd-grid">
+            {filtered.map((v) => (
+              <div key={v.id} className="vd-job">
+                <div className="vd-top">
+                  <div className="vd-avatar">{(v.empresa || "E").slice(0, 1)}</div>
+
+                  <div className="vd-main">
+                    <div className="vd-title">{v.puesto}</div>
+                    <div className="vd-company">{v.empresa}</div>
                   </div>
-                  <div className="gui-mail">{u.correo}</div>
                 </div>
-              </div>
 
-              <div className="gui-role">
-                <span className={`gui-pill ${u.rol === "ADMINISTRADOR" ? "admin" : ""}`}>
-                  {u.rol}
-                </span>
-              </div>
+                <div className="vd-meta">
+                  <div className="vd-row">🧾 {v.area} • {v.tipo}</div>
+                  <div className="vd-row">📍 {v.modalidad}</div>
+                </div>
 
-              <div className="gui-date">{u.fecha}</div>
-
-              <div className="gui-actions">
-                {!u.locked ? (
-                  <>
-                    <button
-                      type="button"
-                      className="gui-act"
-                      title="Editar"
-                      onClick={() => openEditar(u)}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      type="button"
-                      className="gui-act"
-                      title="Eliminar"
-                      onClick={() => eliminar(u)}
-                    >
-                      🗑️
-                    </button>
-                  </>
-                ) : (
-                  <span className="gui-lock">—</span>
-                )}
+                <button className="vd-btn" type="button" onClick={() => openDetalle(v)}>
+                  Ver Detalles
+                </button>
               </div>
-            </div>
-          ))
+            ))}
+
+            {!filtered.length ? (
+              <div style={{ padding: 12 }}>No hay vacantes que coincidan con tu búsqueda.</div>
+            ) : null}
+          </div>
         )}
       </div>
 
-      {/* MODAL NUEVO */}
-      <Modal isOpen={showNuevo} onClose={closeNuevo} title="Nuevo Profesor/Staff">
-        <form className="gui-form" onSubmit={submitNuevo}>
-          <div className="gui-field">
-            <label>NOMBRE COMPLETO</label>
-            <input
-              value={formNuevo.nombre}
-              onChange={onChangeNuevo("nombre")}
-              placeholder="Ej: Juan Pérez"
-            />
-          </div>
+      {/* MODAL DETALLES */}
+      <Modal isOpen={showDetalle} onClose={closeDetalle} title="Detalles de la Vacante">
+        {!selected ? null : (
+          <div className="vdd-wrap">
+            <div className="vdd-top">
+              <div className="vdd-avatar">{selected.empresa?.slice(0, 1) || "V"}</div>
 
-          <div className="gui-field">
-            <label>CORREO ELECTRÓNICO</label>
-            <input
-              type="email"
-              value={formNuevo.correo}
-              onChange={onChangeNuevo("correo")}
-              placeholder="usuario@institucion.ac.cr"
-            />
-          </div>
+              <div className="vdd-main">
+                <div className="vdd-title">{selected.puesto}</div>
+                <div className="vdd-sub">
+                  {selected.empresa} • <span className="vdd-dot">{selected.area || "—"}</span>
+                </div>
 
-          <div className="gui-field">
-            <label>ROL</label>
-            <div className="gui-select">
-              <select value={formNuevo.rol} onChange={onChangeNuevo("rol")}>
-                <option>Profesor</option>
-                <option>Staff</option>
-                <option>Administrador</option>
-              </select>
-              <span className="gui-caret">▾</span>
+                <a className="vdd-link" href={`mailto:${selected.correo || "rrhh@empresa.com"}`}>
+                  {selected.correo || "rrhh@empresa.com"}
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div className="gui-field">
-            <label>CONTRASEÑA TEMPORAL</label>
-            <input
-              type="password"
-              value={formNuevo.passTemp}
-              onChange={onChangeNuevo("passTemp")}
-              placeholder="••••••••"
-            />
-          </div>
+            <div className="vdd-meta">
+              <div className="vdd-metaItem">
+                <div className="vdd-metaLbl">CONTRATO</div>
+                <div className="vdd-metaVal">{selected.tipo || "—"}</div>
+              </div>
 
-          <div className="gui-actionsRow">
-            <button type="button" className="gui-cancel" onClick={closeNuevo}>
-              Cancelar
-            </button>
-            <button type="submit" className="gui-save">
-              Crear Usuario
+              <div className="vdd-metaItem">
+                <div className="vdd-metaLbl">MODALIDAD</div>
+                <div className="vdd-metaVal">{selected.modalidad || "—"}</div>
+              </div>
+            </div>
+
+            <div className="vdd-sec">
+              <div className="vdd-secLbl">DESCRIPCIÓN</div>
+              <div className="vdd-descBox">{selected.descripcion || "Sin descripción disponible."}</div>
+            </div>
+
+            <div className="vdd-sec">
+              <div className="vdd-secLbl">REQUISITOS</div>
+              <div className="vdd-chips">
+                {(selected.requisitos || []).length ? (
+                  (selected.requisitos || []).map((r) => (
+                    <span key={r} className="vdd-chip">{r}</span>
+                  ))
+                ) : (
+                  <span className="vdd-chip">No especificados</span>
+                )}
+              </div>
+            </div>
+
+            <button className="vdd-cta" type="button" onClick={openRecomendar}>
+              Recomendar Estudiantes para esta Vacante
             </button>
           </div>
-        </form>
+        )}
       </Modal>
 
-      {/* MODAL EDITAR */}
-      <Modal isOpen={showEditar} onClose={closeEditar} title="Editar Usuario">
-        <form className="gui-form" onSubmit={submitEditar}>
-          <div className="gui-field">
-            <label>NOMBRE COMPLETO</label>
-            <input value={formEditar.nombre} onChange={onChangeEditar("nombre")} />
-          </div>
+      {/* MODAL RECOMENDAR */}
+      <Modal isOpen={showRecomendar} onClose={closeRecomendar} title="Recomendar Estudiantes">
+        {!selected ? null : (
+          <div className="rec-wrap">
+            <div className="rec-subtitle">
+              Para la vacante: <strong>{selected.puesto}</strong> en{" "}
+              <strong>{selected.empresa}</strong>
+            </div>
 
-          <div className="gui-field">
-            <label>CORREO ELECTRÓNICO</label>
-            <input type="email" value={formEditar.correo} onChange={onChangeEditar("correo")} />
-          </div>
+            <p className="rec-help">
+              Selecciona los perfiles de los estudiantes que deseas recomendar y escribe una breve recomendación.
+              Se enviará su información de perfil y CV a la empresa.
+            </p>
 
-          <div className="gui-field">
-            <label>ROL</label>
-            <div className="gui-select">
-              <select value={formEditar.rol} onChange={onChangeEditar("rol")}>
-                <option>Profesor</option>
-                <option>Staff</option>
-                <option>Administrador</option>
-              </select>
-              <span className="gui-caret">▾</span>
+            <div className="rec-label">RECOMENDACIÓN INSTITUCIONAL</div>
+            <textarea
+              className="rec-textarea"
+              value={recomText}
+              onChange={(e) => setRecomText(e.target.value)}
+              placeholder="Escribe aquí por qué recomiendas a estos estudiantes para esta vacante..."
+              rows={4}
+            />
+
+            <div className="rec-rowHead">
+              <div className="rec-label">SELECCIONAR ESTUDIANTES</div>
+
+              <div className="rec-search">
+                <span className="rec-searchIco">🔎</span>
+                <input
+                  value={searchStd}
+                  onChange={(e) => setSearchStd(e.target.value)}
+                  placeholder="Buscar por nombre o carrera..."
+                />
+              </div>
+            </div>
+
+            <div className="rec-list">
+              {filteredEstudiantes.map((s) => {
+                const checked = selectedStdIds.includes(s.id);
+
+                return (
+                  <div key={s.id} className="rec-item">
+                    <label className="rec-left">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleStd(s.id)}
+                      />
+                      <div className="rec-info">
+                        <div className="rec-name">{s.nombre}</div>
+                        <div className="rec-career">{s.carrera}</div>
+                      </div>
+                    </label>
+
+                    <div className="rec-actions">
+                      <button type="button" className="rec-eye" title="Ver">👁️</button>
+                      {s.badge ? (
+                        <button type="button" className="rec-pill">{s.badge}</button>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="rec-footer">
+              <button type="button" className="rec-cancel" onClick={closeRecomendar}>
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className={`rec-send ${selectedStdIds.length ? "on" : ""}`}
+                disabled={!selectedStdIds.length}
+                onClick={enviarRecomendacion}
+              >
+                Enviar Recomendación
+              </button>
             </div>
           </div>
-
-          <div className="gui-actionsRow">
-            <button type="button" className="gui-cancel" onClick={closeEditar}>
-              Cancelar
-            </button>
-            <button type="submit" className="gui-save">
-              Guardar Cambios
-            </button>
-          </div>
-        </form>
+        )}
       </Modal>
     </div>
   );

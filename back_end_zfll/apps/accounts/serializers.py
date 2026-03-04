@@ -85,42 +85,66 @@ class PerfilPracticanteSerializer(serializers.ModelSerializer):
             "fecha_creacion",
         ]
         read_only_fields = ["id", "fecha_creacion", "cargado_por_institucion"]
-class EgresadoListSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    nombre = serializers.CharField()
-    correo = serializers.EmailField()
-    carrera = serializers.CharField(allow_blank=True)
-    estado = serializers.CharField(allow_blank=True)
 
-    # opcionales si luego quieres pintarlas
-    programa_id = serializers.IntegerField(required=False, allow_null=True)
-    programa_nombre = serializers.CharField(required=False, allow_blank=True)
+    # Campos “bonitos” para el front
+    nombre = serializers.CharField(source="first_name", required=False, allow_blank=True)
+    apellido = serializers.CharField(source="last_name", required=False, allow_blank=True)
+    correo = serializers.EmailField(source="email")
 
-def build_egresado_from_perfil(perfil: PerfilPracticante):
-    u = perfil.usuario
-    nombre = (f"{u.first_name or ''} {u.last_name or ''}".strip()) or (u.username or u.email or "Egresado")
+    # perfil practicante
+    institucion_id = serializers.IntegerField(source="perfil_practicante.institucion_id", required=False, allow_null=True)
+    programa_id = serializers.IntegerField(source="perfil_practicante.programa_id", required=False, allow_null=True)
 
-    carrera = ""
-    programa_id = None
-    programa_nombre = ""
+    class Meta:
+        model = User
+        fields = ["id", "correo", "username", "nombre", "apellido", "phone", "institucion_id", "programa_id"]
+        read_only_fields = ["id"]
 
-    if getattr(perfil, "programa_id", None):
-        programa_id = perfil.programa_id
-        try:
-            programa_nombre = perfil.programa.nombre
-        except Exception:
-            programa_nombre = ""
-        carrera = programa_nombre or ""
+    def create(self, validated_data):
+        perfil_data = validated_data.pop("perfil_practicante", {})
+        email = validated_data.get("email")
+        username = validated_data.get("username") or (email.split("@")[0] if email else None)
 
-    # Estado: si tu PerfilPracticante tiene un campo estado úsalo, si no dejamos "DISPONIBLE"
-    estado = getattr(perfil, "estado", None) or "DISPONIBLE"
+        password_temp = self.context["request"].data.get("passTemp") or self.context["request"].data.get("password")
+        if not password_temp:
+            raise serializers.ValidationError({"passTemp": "Contraseña temporal requerida"})
 
-    return {
-        "id": u.id,
-        "nombre": nombre,
-        "correo": u.email,
-        "carrera": carrera,
-        "estado": estado,
-        "programa_id": programa_id,
-        "programa_nombre": programa_nombre,
-    }
+        user = User.objects.create(
+            username=username,
+            email=email,
+            first_name=validated_data.get("first_name", ""),
+            last_name=validated_data.get("last_name", ""),
+            phone=validated_data.get("phone", ""),
+        )
+        user.set_password(password_temp)
+        user.save()
+
+        # asignar rol practicante
+        rol = Rol.objects.get(nombre="practicante")
+        UsuarioRol.objects.get_or_create(usuario=user, rol=rol)
+
+        # crear/actualizar perfil practicante
+        perfil, _ = PerfilPracticante.objects.get_or_create(usuario=user)
+        perfil.institucion_id = perfil_data.get("institucion_id") or None
+        perfil.programa_id = perfil_data.get("programa_id") or None
+        perfil.save()
+
+        return user
+
+    def update(self, instance, validated_data):
+        perfil_data = validated_data.pop("perfil_practicante", {})
+
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.email = validated_data.get("email", instance.email)
+        instance.username = validated_data.get("username", instance.username)
+        instance.phone = validated_data.get("phone", instance.phone)
+        instance.save()
+
+        # actualizar perfil practicante
+        perfil, _ = PerfilPracticante.objects.get_or_create(usuario=instance)
+        perfil.institucion_id = perfil_data.get("institucion_id", perfil.institucion_id)
+        perfil.programa_id = perfil_data.get("programa_id", perfil.programa_id)
+        perfil.save()
+
+        return instance

@@ -40,4 +40,6 @@ urlpatterns = [
         views.AdminUserDetailView.as_view(),
         name="admin-user-detail",
     ),
+    # ── Institución: gestión de egresados (practicantes) ─────────
+
 ]

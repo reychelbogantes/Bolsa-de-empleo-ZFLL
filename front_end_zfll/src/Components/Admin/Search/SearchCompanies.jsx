@@ -3,8 +3,12 @@ import { Search, X, Building2, MapPin, Mail, Phone, Eye } from 'lucide-react';
 import Card from '../Card/Card';
 import Modal from '../Modal/Modal';
 import StatusBadge from '../StatusBadge/StatusBadge';
-import { getCompanies } from '../../../Services/Admin/Companyservice';
-import styles from './Search.module.css';
+/* import { getCompanies } from '../../../Services/Admin/Companyservice';
+ */import styles from './Search.module.css';
+
+import { mockCompanies } from './mockData';
+
+export const getCompanies = () => Promise.resolve(mockCompanies);
 
 const CANTONES = [
   'San José','Escazú','Desamparados','Puriscal','Tarrazú','Aserrí','Mora','Goicoechea',

@@ -23,7 +23,7 @@
 }
 
 /* ── Panel ──────────────────────────────────────────── */
-.am-panel {
+.am-panel1 {
   background: #fff;
   border-radius: 2rem;
   width: 100%; max-width: 520px;
@@ -296,5 +296,5 @@
   .am-header { padding: 1.25rem 1.25rem 0; }
   .am-body   { padding: 1.25rem; }
   .am-footer { padding: 1rem 1.25rem 1.25rem; }
-  .am-panel  { border-radius: 1.5rem; }
+  .am-panel1  { border-radius: 1.5rem; }
 }

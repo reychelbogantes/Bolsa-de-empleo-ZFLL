@@ -14,6 +14,7 @@ from .serializers import (
     PerfilPracticanteSerializer,
     UserSerializer,
 )
+from apps.institutions.serializers import build_egresado_from_perfil
 
 class EgresadosInstitucionListView(APIView):
     """

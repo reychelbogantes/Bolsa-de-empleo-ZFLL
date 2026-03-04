@@ -8,6 +8,7 @@ import {
   MapPin, Clock, ChevronRight,
 } from 'lucide-react';
 import './DashboardAspirante.css';
+import JobDetailModal from '../JobDetailModal/JobDetailModal';
 
 const CANTONES = [
   'Todos los Cantones', 'Cartago', 'Paraíso', 'La Unión',
@@ -63,6 +64,8 @@ const DashboardAspirante = ({ usuario, onApply, onSelectJob }) => {
   const [soloPassantias, setSoloPassantias] = useState(false);
 
   const nombre = usuario?.nombre_completo?.split(' ')[0] || 'Aspirante';
+  const [detailJob, setDetailJob] = useState(null);
+  const [showDetail, setShowDetail] = useState(false);
 
   const filtered = MOCK_JOBS.filter(j => {
     const matchSearch =
@@ -171,7 +174,7 @@ const DashboardAspirante = ({ usuario, onApply, onSelectJob }) => {
                 <div className="job-card__actions">
                   <button
                     className="job-card__btn-detail"
-                    onClick={() => onSelectJob && onSelectJob(job)}
+                    onClick={() => { setDetailJob(job); setShowDetail(true); }}
                   >
                     Detalles
                   </button>
@@ -187,6 +190,12 @@ const DashboardAspirante = ({ usuario, onApply, onSelectJob }) => {
           </div>
         )}
       </section>
+      <JobDetailModal
+        job={showDetail ? detailJob : null}
+        isOpen={showDetail}
+        onClose={() => setShowDetail(false)}
+        onApply={(job) => { setShowDetail(false); onApply && onApply(job); }}
+      />
     </div>
   );
 };

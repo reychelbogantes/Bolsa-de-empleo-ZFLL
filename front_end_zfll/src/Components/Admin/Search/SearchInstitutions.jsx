@@ -3,8 +3,13 @@ import { Search, X, GraduationCap, MapPin, Mail, Phone, Eye } from 'lucide-react
 import Card from '../Card/Card';
 import Modal from '../Modal/Modal';
 import StatusBadge from '../StatusBadge/StatusBadge';
-import { getInstitutions } from '../../../Services/Admin/institutionService';
-import styles from './Search.module.css';
+/* import { getInstitutions } from '../../../Services/Admin/institutionService';
+ */import styles from './Search.module.css';
+
+import { mockInstitutions } from './mockData';
+
+export const getInstitutions = () => Promise.resolve(mockInstitutions);
+
 
 const CANTONES = [
   'San José','Escazú','Desamparados','Puriscal','Tarrazú','Aserrí','Mora','Goicoechea',

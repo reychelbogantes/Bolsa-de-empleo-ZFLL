@@ -72,7 +72,7 @@ const ApplyModal = ({
 
   return (
     <div className="am-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="am-panel" role="dialog" aria-modal="true" aria-label="Postulación">
+      <div className="am-panel1" role="dialog" aria-modal="true" aria-label="Postulación">
 
         {/* ── Header ── */}
         <div className="am-header">

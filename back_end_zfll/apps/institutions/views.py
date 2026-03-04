@@ -1,203 +1,21 @@
-from django.shortcuts import get_object_or_404
-from django.db.models import Count
-from django.db.models.functions import TruncMonth
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from shared.permissions import IsInstitucion
-from apps.accounts.models import PerfilPracticante
-from apps.jobs.models import Vacante
-from apps.pasantias.models import SolicitudPasantia
-
-from .models import Institucion, ProgramaFormacion, UsuarioInstitucional
-from .serializers import (
-    build_egresado_from_perfil,
-    InstitucionSerializer,
-    UsuarioInstitucionalSerializer,
-    UsuarioInstitucionalCreateSerializer,
-    ProgramaFormacionCRUDSerializer,
-)
-
-class EgresadosInstitucionListView(APIView):
-    """
-    GET /api/accounts/egresados/
-    Lista egresados (practicantes) vinculados a la institución del usuario autenticado.
-    """
-    permission_classes = [IsAuthenticated, IsInstitucion]
-
-    def get(self, request):
-        inst = request.user.institucion
-        qs = (
-            PerfilPracticante.objects
-            .select_related("usuario", "programa")
-            .filter(institucion=inst)
-            .order_by("-id")
-        )
-
-        data = [build_egresado_from_perfil(p) for p in qs]
-        return Response(data)
-
-class InstitucionListView(generics.ListAPIView):
-    """
-    GET /api/institutions/
-    - Admin: devuelve TODAS las instituciones
-    - Otros: solo activas
-    Filtro opcional: ?activa=false para pendientes
-    """
-    serializer_class = InstitucionSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        qs = Institucion.objects.select_related("usuario", "tipo_institucion").all()
-
-        if not (user.is_staff or user.is_superuser or (hasattr(user, 'has_role') and user.has_role("admin"))):
-            qs = qs.filter(activa=True)
-
-        activa_param = self.request.query_params.get("activa")
-        if activa_param is not None:
-            qs = qs.filter(activa=activa_param.lower() == "true")
-
-        return qs
-
-
-class InstitucionDetailView(generics.RetrieveUpdateAPIView):
-    """GET/PATCH /api/institutions/{id}/"""
-    queryset = Institucion.objects.select_related("usuario", "tipo_institucion").all()
-    serializer_class = InstitucionSerializer
-    permission_classes = [IsAuthenticated]
-
-
-def _get_my_institucion(request):
-    return get_object_or_404(Institucion, usuario=request.user)
-
-
-# ─────────────────────────────────────────────
-# Usuarios institucionales (Gestión de Usuarios)
-# ─────────────────────────────────────────────
-
-class InstitucionUsersListCreateView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsInstitucion]
-
-    def get_queryset(self):
-        inst = _get_my_institucion(self.request)
-        return UsuarioInstitucional.objects.select_related("usuario").filter(institucion=inst)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return UsuarioInstitucionalCreateSerializer
-        return UsuarioInstitucionalSerializer
-
-    def get_serializer_context(self):
-        ctx = super().get_serializer_context()
-        ctx["institucion"] = _get_my_institucion(self.request)
-        return ctx
-
-    def create(self, request, *args, **kwargs):
-        ser = self.get_serializer(data=request.data)
-        ser.is_valid(raise_exception=True)
-        perfil = ser.save()
-        out = UsuarioInstitucionalSerializer(perfil, context=self.get_serializer_context()).data
-        return Response(out, status=201)
-
-
-class InstitucionUsersDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsInstitucion]
-    serializer_class = UsuarioInstitucionalSerializer
-
-    def get_queryset(self):
-        inst = _get_my_institucion(self.request)
-        return UsuarioInstitucional.objects.select_related("usuario").filter(institucion=inst)
-
-
-# ─────────────────────────────────────────────
-# Programas (Programas y Profesores)
-# ─────────────────────────────────────────────
+from .models import ProgramaFormacion
+from .serializers import ProgramaFormacionSerializer
+from shared.permissions import IsInstitucion  # si ya lo usas en otras views
 
 class ProgramasListCreateView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsInstitucion]
-    serializer_class = ProgramaFormacionCRUDSerializer
+    serializer_class = ProgramaFormacionSerializer
+    permission_classes = [IsInstitucion]
 
     def get_queryset(self):
-        inst = _get_my_institucion(self.request)
-        return ProgramaFormacion.objects.filter(institucion=inst)
+        return ProgramaFormacion.objects.filter(institucion=self.request.user.institucion)
 
     def perform_create(self, serializer):
-        inst = _get_my_institucion(self.request)
-        serializer.save(institucion=inst)
-
+        serializer.save(institucion=self.request.user.institucion)
 
 class ProgramasDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsInstitucion]
-    serializer_class = ProgramaFormacionCRUDSerializer
+    serializer_class = ProgramaFormacionSerializer
+    permission_classes = [IsInstitucion]
 
     def get_queryset(self):
-        inst = _get_my_institucion(self.request)
-        return ProgramaFormacion.objects.filter(institucion=inst)
-
-
-# ─────────────────────────────────────────────
-# Demanda Laboral (Institución)
-# ─────────────────────────────────────────────
-
-class DemandaLaboralView(APIView):
-    permission_classes = [IsAuthenticated, IsInstitucion]
-
-    def get(self, request):
-        inst = _get_my_institucion(request)
-
-        # Top "carreras/áreas" => usamos AreaTrabajo como proxy
-        top_areas = (
-            Vacante.objects
-            .values("area_trabajo__nombre")
-            .annotate(total=Count("id"))
-            .order_by("-total")[:5]
-        )
-        carreras = [
-            {"nombre": x["area_trabajo__nombre"] or "Sin área", "total": x["total"]}
-            for x in top_areas
-        ]
-
-        # Habilidades => usamos TipoPuesto como proxy (no hay tabla skills)
-        top_tipos = (
-            Vacante.objects
-            .values("tipo_puesto__nombre")
-            .annotate(total=Count("id"))
-            .order_by("-total")[:4]
-        )
-        habilidades = [
-            {"nombre": x["tipo_puesto__nombre"] or "General", "total": x["total"]}
-            for x in top_tipos
-        ]
-
-        # Interacción empresa-institución => solicitudes pasantía por mes (solo de esta institución)
-        qs = SolicitudPasantia.objects.filter(institucion=inst)
-        mensual = (
-            qs.annotate(mes=TruncMonth("fecha_creacion"))
-              .values("mes")
-              .annotate(total=Count("id"))
-              .order_by("mes")
-        )
-
-        interaccion = [
-            {
-                "mes": x["mes"].strftime("%b"),
-                "empresas": x["total"],
-                "instituciones": max(0, int(x["total"] * 0.6)),  # proxy visual (si luego agregas recibidas reales lo cambiamos)
-            }
-            for x in mensual
-        ]
-
-        return Response({
-            "carreras_mayor_demanda": carreras,
-            "habilidades_mas_solicitadas": habilidades,
-            "interaccion": interaccion,
-            "perfil_buscado": {
-                "habilidades_blandas": 95,
-                "idiomas": 88,
-                "excelencia_academica": 75,
-                "certificaciones": 60,
-            }
-        })
+        return ProgramaFormacion.objects.filter(institucion=self.request.user.institucion)

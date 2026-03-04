@@ -4,7 +4,7 @@ import api from "../apiClient";
 // Ejemplos comunes:
 // const EGRESADOS_BASE = "/egresados";
 // const EGRESADOS_BASE = "/instituciones/egresados";  (si está agrupado)
-const EGRESADOS_BASE = "/egresados";
+const EGRESADOS_BASE = "/accounts/egresados";
 
 // Helpers para normalizar respuestas DRF
 function normalizeList(data) {

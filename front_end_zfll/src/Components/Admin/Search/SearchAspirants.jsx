@@ -3,8 +3,12 @@ import { Search, X, Users, MapPin, Mail, Phone, Eye, Calendar } from 'lucide-rea
 import Card from '../Card/Card';
 import Modal from '../Modal/Modal';
 import StatusBadge from '../StatusBadge/StatusBadge';
-import { getAspirants } from '../../../Services/Admin/aspirantService';
+/* import { getAspirants } from '../../../Services/Admin/aspirantService'; */
 import styles from './Search.module.css';
+import { mockAspirants } from './mockData';
+
+export const getAspirants = () => Promise.resolve(mockAspirants);
+
 
 const STATUS_OPTIONS = [
   { value: '',       label: 'Todos los estados' },
