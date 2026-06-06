@@ -11,6 +11,7 @@ import Login from '../Pages/Login_Admin/Login'
 
 
 
+
 // ✅ useNavigate va en un componente separado, DENTRO del Router
 function AppRoutes() {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ function AppRoutes() {
   };
 
   return (
-    <Routes basename="/Bolsa-de-empleo-ZFLL">
+    <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/PanelAdmin" element={<AdminPanel />} />
       <Route path="/notificaciones/preferencias" element={<NotificationPreferences />} />
@@ -46,7 +47,7 @@ function AppRoutes() {
 
 function Routing() {
   return (
-    <Router>
+    <Router basename="/Bolsa-de-empleo-ZFLL">
       <AppRoutes /> {/* ← AppRoutes va dentro del Router */}
     </Router>
   )
