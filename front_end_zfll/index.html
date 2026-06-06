@@ -5,6 +5,13 @@
     <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}logo.png`} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZFLL - Bolsa de Empleo Zona Franca la Lima</title>
+    <script>
+      var redirect = sessionStorage.getItem('redirect');
+      if (redirect) {
+        sessionStorage.removeItem('redirect');
+        window.history.replaceState(null, null, '/Bolsa-de-empleo-ZFLL' + redirect);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
