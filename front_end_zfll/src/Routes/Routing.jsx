@@ -28,7 +28,7 @@ function AppRoutes() {
   };
 
   return (
-    <Routes>
+    <Routes basename="/Bolsa-de-empleo-ZFLL">
       <Route path="/" element={<Homepage />} />
       <Route path="/PanelAdmin" element={<AdminPanel />} />
       <Route path="/notificaciones/preferencias" element={<NotificationPreferences />} />
