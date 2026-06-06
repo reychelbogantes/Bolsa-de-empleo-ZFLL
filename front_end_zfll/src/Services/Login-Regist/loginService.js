@@ -5,9 +5,9 @@
 // Para conectar al backend real: cambiar IS_MOCK a false en mockAuth.js
 // ============================================================
 
-import { IS_MOCK, mockLogin, mockCheckUser } from '../mockAuth.js';
+import { IS_MOCK, mockRegister } from '../../Services/Aspirantes/mockAuth.js';
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api';
+/* const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api'; */
 
 // ── 1. Verificar si un correo existe ──────────────────────────
 export async function checkUserExists({ correo, tipo }) {
