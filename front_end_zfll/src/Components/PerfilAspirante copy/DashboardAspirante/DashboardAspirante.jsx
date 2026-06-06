@@ -9,7 +9,7 @@ import {
   MapPin, Clock, ChevronRight, Loader,
 } from 'lucide-react';
 /* import { getVacantes } from '../../../Services/Aspirantes/aspiranteService'; */
-import { getVacantes } from '../../../Services/Aspirantes/mockAuth.js';
+import { getVacantes } from '../../../mockAuth.js';
 import './DashboardAspirante.css';
 
 const CANTONES = [
