@@ -6,7 +6,8 @@
  */
 import { useState, useEffect } from 'react';
 import { FileText, Clock, Percent, MessageSquare, CheckCircle2, Loader } from 'lucide-react';
-import { getPostulaciones } from '../../../Services/Aspirantes/aspiranteService';
+/* import { getPostulaciones } from '../../../Services/Aspirantes/aspiranteService'; */
+import { getPostulaciones } from '../../../Services/mockAuth.js';
 import './Postulaciones.css';
 
 /* ─── Helpers ─────────────────────────────────────── */

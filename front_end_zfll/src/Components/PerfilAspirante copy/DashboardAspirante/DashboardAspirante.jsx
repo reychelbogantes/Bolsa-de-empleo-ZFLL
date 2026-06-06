@@ -8,7 +8,8 @@ import {
   Search, Filter, Briefcase, CheckCircle2, ExternalLink,
   MapPin, Clock, ChevronRight, Loader,
 } from 'lucide-react';
-import { getVacantes } from '../../../Services/Aspirantes/aspiranteService';
+/* import { getVacantes } from '../../../Services/Aspirantes/aspiranteService'; */
+import { getVacantes } from '../../../Services/mockAuth.js';
 import './DashboardAspirante.css';
 
 const CANTONES = [
