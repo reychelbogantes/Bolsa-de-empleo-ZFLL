@@ -325,8 +325,8 @@ export async function mockLogin({ correo, contrasena }) {
   const found = MOCK_USERS.find((u) => u.email === correo && u.password === contrasena);
   if (!found) throw new Error('Credenciales incorrectas. Usá los usuarios de demo.');
 
-  localStorage.setItem('accessToken', found.tokens.access);
-  localStorage.setItem('refreshToken', found.tokens.refresh);
+  localStorage.setItem('access_token', found.tokens.access);
+  localStorage.setItem('refresh_token', found.tokens.refresh);
   localStorage.setItem('user', JSON.stringify(found.user));
 
   return { user: found.user, tokens: found.tokens };
@@ -348,8 +348,8 @@ export async function mockRegister({ email, password, role, nombre }) {
     refresh: `mock-refresh-${role}`,
   };
 
-  localStorage.setItem('accessToken', tokens.access);
-  localStorage.setItem('refreshToken', tokens.refresh);
+  localStorage.setItem('access_token', tokens.access);
+  localStorage.setItem('refresh_token', tokens.refresh);
   localStorage.setItem('user', JSON.stringify(user));
 
   return { user, tokens };
@@ -371,14 +371,14 @@ export async function refreshToken() {
   if (!isAuthenticated()) throw new Error('No autorizado');
   const user = getCurrentUser();
   const newToken = `mock-token-${user.role}-${Date.now()}`;
-  localStorage.setItem('accessToken', newToken);
+  localStorage.setItem('access_token', newToken);
   return newToken;
 }
 
 export async function logout() {
   await delay(200);
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
   localStorage.removeItem('user');
   localStorage.removeItem('mockPerfilAspirante');
   localStorage.removeItem('mockCvVersions');
