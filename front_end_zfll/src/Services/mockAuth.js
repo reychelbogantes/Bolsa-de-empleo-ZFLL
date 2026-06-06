@@ -304,7 +304,7 @@ const MOCK_VACANTES = [
 const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function isAuthenticated() {
-  return !!localStorage.getItem('accessToken');
+  return !!localStorage.getItem('access_token');
 }
 
 function getCurrentUser() {
