@@ -1,9 +1,95 @@
+
 // ============================================================
+// loginService.js
+// Conectado al backend real: /api/auth/
+// Para conectar al backend real: cambiar IS_MOCK a false en mockAuth.js
+// ============================================================
+
+import { IS_MOCK, mockLogin, mockCheckUser } from '../mockAuth.js';
+
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api';
+
+// ── 1. Verificar si un correo existe ──────────────────────────
+export async function checkUserExists({ correo, tipo }) {
+  if (IS_MOCK) return mockCheckUser({ correo });
+
+  const res = await fetch(`${BASE_URL}/auth/check-user/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ correo, tipo }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail ?? 'Error al verificar el correo.');
+  return { found: data.exists, email: data.email };
+}
+
+// ── 2. Login de Aspirante ─────────────────────────────────────
+export async function loginAspirante({ correo, contrasena }) {
+  if (IS_MOCK) return mockLogin({ correo, contrasena });
+
+  const res = await fetch(`${BASE_URL}/auth/login/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ correo, contrasena }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail ?? 'Credenciales incorrectas.');
+  return data;
+}
+
+// ── 3. Login de Empresa o Instituto ──────────────────────────
+export async function loginOrg({ correo, contrasena, tipo, subrole }) {
+  if (IS_MOCK) return mockLogin({ correo, contrasena });
+
+  const res = await fetch(`${BASE_URL}/auth/login-org/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ correo, contrasena, tipo, subrole }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail ?? 'Credenciales incorrectas.');
+  return data;
+}
+
+// ── 4. Login con Google ───────────────────────────────────────
+export async function loginConGoogle(credential) {
+  if (IS_MOCK) throw new Error('Google login no disponible en modo demo.');
+
+  const res = await fetch(`${BASE_URL}/auth/google/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ credential, tipo: 'aspirante' }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail ?? 'Error al iniciar sesión con Google.');
+  return data;
+}
+
+// ── 5. Refrescar access token ─────────────────────────────────
+export async function refreshAccessToken(refreshToken) {
+  if (IS_MOCK) return { access: 'mock-token-refreshed' };
+
+  const res = await fetch(`${BASE_URL}/auth/token/refresh/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh: refreshToken }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error('Sesión expirada. Inicia sesión de nuevo.');
+  return data;
+}
+
+
+
+
+
+/* // ============================================================
 // loginService.js
 // Conectado al backend real: /api/auth/
 // ============================================================
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api';
+import { IS_MOCK, mockLogin, mockCheckUser } from '../mockAuth.js';
 
 // ── 1. Verificar si un correo existe ──────────────────────────
 // Endpoint: POST /api/auth/check-user/
@@ -84,4 +170,4 @@ export async function refreshAccessToken(refreshToken) {
   const data = await res.json();
   if (!res.ok) throw new Error('Sesión expirada. Inicia sesión de nuevo.');
   return data; // { access }
-}
+} */
