@@ -5,7 +5,12 @@
 // Para conectar al backend real: cambiar IS_MOCK a false en mockAuth.js
 // ============================================================
 
-import { IS_MOCK, mockRegister } from '../../Services/Aspirantes/mockAuth.js';
+import { 
+  IS_MOCK, 
+  mockRegister, 
+  mockLogin, 
+  mockCheckUser 
+} from '../../Services/Aspirantes/mockAuth.js';
 
 /* const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api'; */
 
