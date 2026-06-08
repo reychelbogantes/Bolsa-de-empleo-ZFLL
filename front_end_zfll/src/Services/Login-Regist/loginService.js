@@ -16,8 +16,11 @@ import {
 
 // ── 1. Verificar si un correo existe ──────────────────────────
 export async function checkUserExists({ correo, tipo }) {
-  if (IS_MOCK) return mockCheckUser({ correo });
-
+  if (IS_MOCK) {
+    const result = await mockCheckUser({ correo });
+    console.log('checkUserExists result:', result);
+    return result;
+  }
   const res = await fetch(`${BASE_URL}/auth/check-user/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
