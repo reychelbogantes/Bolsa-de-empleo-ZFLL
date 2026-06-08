@@ -90,6 +90,9 @@ export default function AuthPage({ onLoginSuccess = () => {}, onBack = () => {} 
             /* Blanco en login → formulario de login */
             <LoginForm onSuccess={onLoginSuccess} />
           )}
+          <p style={{fontSize: '0.75rem', color: '#888', textAlign: 'center', marginTop: '1rem'}}>
+            ¿Problemas para ingresar? Intentá en modo incógnito o desactivá las extensiones del navegador.
+          </p>
         </div>
 
       </div>
