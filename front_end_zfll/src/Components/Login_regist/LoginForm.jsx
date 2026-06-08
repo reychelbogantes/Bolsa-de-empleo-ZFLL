@@ -7,6 +7,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { User, Lock, ChevronRight } from 'lucide-react';
 import { checkUserExists, loginAspirante, loginOrg, loginConGoogle } from '../../Services/Login-Regist/loginService.js';
 import '../../Pages/Login_Regist/AuthPage.css';
+import { IS_MOCK } from '../../Services/mockAuth.js';
 
 const TABS = [
   { key: 'user',      label: 'Aspirante' },
@@ -196,7 +197,7 @@ export default function LoginForm({ onSuccess }) {
       </form>
 
       {/* Google — solo aspirante */}
-      {loginType === 'user' && (
+      {loginType === 'user' && !IS_MOCK && (
         <div className="auth-social">
           <div className="auth-divider"><span>o inicia sesión con</span></div>
           <GoogleLogin
